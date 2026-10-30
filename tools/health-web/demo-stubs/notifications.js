@@ -1,0 +1,24 @@
+import './web-polyfills';
+// Web stand-in for expo-notifications: the demo has no lock screen to notify.
+const noop = async () => {};
+const sub = { remove() {} };
+export const SchedulableTriggerInputTypes = { CALENDAR: 'calendar', DAILY: 'daily', WEEKLY: 'weekly', MONTHLY: 'monthly', YEARLY: 'yearly', DATE: 'date', TIME_INTERVAL: 'timeInterval' };
+export const AndroidImportance = { DEFAULT: 3, HIGH: 4, MAX: 5 };
+export const scheduleNotificationAsync = async () => 'demo';
+export const cancelScheduledNotificationAsync = noop;
+export const cancelAllScheduledNotificationsAsync = noop;
+export const getAllScheduledNotificationsAsync = async () => [];
+export const requestPermissionsAsync = async () => ({ status: 'denied', granted: false, canAskAgain: false });
+export const getPermissionsAsync = requestPermissionsAsync;
+export const clearLastNotificationResponse = () => {};
+export const clearLastNotificationResponseAsync = noop;
+export const getLastNotificationResponse = () => null;
+export const getLastNotificationResponseAsync = async () => null;
+export const useLastNotificationResponse = () => null;
+export const setNotificationHandler = () => {};
+export const addNotificationResponseReceivedListener = () => sub;
+export const addNotificationReceivedListener = () => sub;
+export const addPushTokenListener = () => sub;
+export const setNotificationChannelAsync = noop;
+export const dismissAllNotificationsAsync = noop;
+export const setBadgeCountAsync = async () => true;

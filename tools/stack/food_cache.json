@@ -1,0 +1,137 @@
+{
+ "egg scrambled": {
+  "source": "fdc",
+  "id": "172187",
+  "name": "egg scrambled"
+ },
+ "whole wheat bread toasted": {
+  "source": "fdc",
+  "id": "172689",
+  "name": "whole wheat bread toasted"
+ },
+ "avocado raw": {
+  "source": "fdc",
+  "id": "2710824",
+  "name": "avocado raw"
+ },
+ "lentil soup": {
+  "source": "fdc",
+  "id": "2707462",
+  "name": "lentil soup"
+ },
+ "salmon baked": {
+  "source": "fdc",
+  "id": "2706286",
+  "name": "salmon baked"
+ },
+ "sweet potato baked": {
+  "source": "fdc",
+  "id": "168483",
+  "name": "sweet potato baked"
+ },
+ "broccoli cooked": {
+  "source": "fdc",
+  "id": "169967",
+  "name": "broccoli cooked"
+ },
+ "plain greek yogurt": {
+  "source": "fdc",
+  "id": "2259794",
+  "name": "plain greek yogurt"
+ },
+ "granola": {
+  "source": "fdc",
+  "id": "2708461",
+  "name": "granola"
+ },
+ "blueberries raw": {
+  "source": "fdc",
+  "id": "2346411",
+  "name": "blueberries raw"
+ },
+ "cheese pizza": {
+  "source": "fdc",
+  "id": "2708616",
+  "name": "cheese pizza"
+ },
+ "ice cream vanilla": {
+  "source": "fdc",
+  "id": "2705630",
+  "name": "ice cream vanilla"
+ },
+ "string cheese mozzarella": {
+  "source": "fdc",
+  "id": "329370",
+  "name": "string cheese mozzarella"
+ },
+ "turkey sandwich": {
+  "source": "fdc",
+  "id": "2706983",
+  "name": "turkey sandwich"
+ },
+ "apple raw": {
+  "source": "fdc",
+  "id": "1750341",
+  "name": "apple raw"
+ },
+ "almonds": {
+  "source": "fdc",
+  "id": "2707485",
+  "name": "almonds"
+ },
+ "chicken breast grilled": {
+  "source": "fdc",
+  "id": "171534",
+  "name": "chicken breast grilled"
+ },
+ "brown rice cooked": {
+  "source": "fdc",
+  "id": "2708414",
+  "name": "brown rice cooked"
+ },
+ "black beans cooked": {
+  "source": "fdc",
+  "id": "2707363",
+  "name": "black beans cooked"
+ },
+ "oatmeal cooked": {
+  "source": "fdc",
+  "id": "173905",
+  "name": "oatmeal cooked"
+ },
+ "banana raw": {
+  "source": "fdc",
+  "id": "173944",
+  "name": "banana raw"
+ },
+ "milk 2%": {
+  "source": "fdc",
+  "id": "2705386",
+  "name": "milk 2%"
+ },
+ "beef tacos": {
+  "source": "fdc",
+  "id": "2708515",
+  "name": "beef tacos"
+ },
+ "cheddar cheese": {
+  "source": "fdc",
+  "id": "328637",
+  "name": "cheddar cheese"
+ },
+ "spaghetti cooked": {
+  "source": "fdc",
+  "id": "169737",
+  "name": "spaghetti cooked"
+ },
+ "marinara sauce": {
+  "source": "fdc",
+  "id": "332282",
+  "name": "marinara sauce"
+ },
+ "parmesan cheese grated": {
+  "source": "fdc",
+  "id": "325036",
+  "name": "parmesan cheese grated"
+ }
+}

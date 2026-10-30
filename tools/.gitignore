@@ -1,0 +1,14 @@
+# Copies of the app repos, their web builds, and local stack binaries
+health/
+claro/
+site/
+stack/venv/
+stack/bin/
+stack/storage/
+stack/*.tar.xz
+stack/*.dump
+stack/*.log
+stack/*.pid
+stack/next_estimate.json
+*.png
+node_modules/

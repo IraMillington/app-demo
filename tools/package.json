@@ -1,0 +1,8 @@
+{
+  "name": "phone-demo",
+  "private": true,
+  "description": "Builds and checks the phone app demo site; see README.md.",
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
