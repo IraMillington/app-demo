@@ -123,7 +123,7 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
       <div>
         <h3>What makes it different</h3>
         <ul class="unique">
-          <li><b>Up to four photos, one meal.</b> A top-down shot and a side shot sharpen the portion estimate. The model is told twice that the photos are one meal, so two angles never count as two servings.</li>
+          <li><b>Up to four photos, one meal.</b> A close-up and a wider shot sharpen the portion estimate. The model is told twice that the photos are one meal, so two angles never count as two servings.</li>
           <li><b>The app reshapes itself around conditions.</b> Lactose intolerance adds lactose in grams per meal against 6 g and 12 g limits, with a lactase check-off. Gut conditions add a 1–5 “how did it sit” rating for each meal and a monthly trigger analysis. Sam has none; Settings shows what each one would change.</li>
           <li><b>An empty meal can mean something.</b> “Didn’t eat this meal” records a real skipped meal, so a gap in the diary isn’t mistaken for a day you barely ate and felt fine.</li>
           <li><b>A workout program that runs itself.</b> Rotating workouts, a built-in logger with a rest timer and last time's weights, phases that change the effort target, and a progress chart for every lift.</li>
@@ -131,19 +131,19 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
         </ul>
       </div>
       <div>
-        <h3>The AI inside, and why these models</h3>
+        <h3>The AI inside, and how the models were tested</h3>
         <ul class="unique">
-          <li><b>Meal estimates: Gemini 3.8 Flash.</b> Gemini 3.5 Flash Lite was chosen first, on quality per dollar, but it could not judge portions. Shown a photo of a leftover pizza quarter, it said a quarter, three quarters and seven eighths had been eaten on different runs (500 to 3,500 kcal). 3.8 Flash said three quarters every time, for about a cent more per estimate.</li>
-          <li><b>Fallback: Gemini 3.5 Flash Lite.</b> Qwen was tried first. In a 20-plate Nutrition5k test it was rate-limited on 9 of 14 calls and took about 54 seconds on the rest; Lite answered every call in about 5 seconds with about the same calorie error. Claude and GPT models reject the strict answer format, so they cannot stand in.</li>
-          <li><b>Monthly trigger analysis: Claude Sonnet 5.5.</b> It runs twelve times a year at 10 to 15 cents a run, and lands within a few points of Opus 5.5 on reasoning tests at half the price.</li>
+          <li><b>Meal estimates: Gemini 3.8 Flash, picked Oct 20 after two tests.</b> First, each candidate estimated 20 plates from Nutrition5k, a research set of real cafeteria meals whose calories are known, and was scored on calorie error, speed and failed calls. Second, the same leftover-pizza photo was run repeatedly to check that the answer holds still. Gemini 3.5 Flash Lite, the cheaper model in use until then, said a quarter, three quarters and seven eighths had been eaten on different runs (500 to 3,500 kcal). 3.8 Flash said three quarters every time, for about a cent more per estimate.</li>
+          <li><b>Fallback: Gemini 3.5 Flash Lite.</b> In the same 20-plate test the previous fallback, Qwen3.8 Flash, was rate-limited on 9 of 14 calls and took about 54 seconds on the rest. Lite answered every call in about 5 seconds with about the same calorie error.</li>
+          <li><b>Monthly trigger analysis: Claude Sonnet 5.5.</b> Chosen Sept 28 from published reasoning scores rather than a test of our own: within a few points of Opus 5.5 at half the price. It runs twelve times a year at 10 to 15 cents a run.</li>
           <li>Models are a setting on the server, so they can be swapped without an app update. In this demo the AI answers are pre-written; everything the server does with them is real.</li>
         </ul>
       </div>
       <div>
         <h3>Try this</h3>
         <ol class="try" id="h-try">
-          <li data-on="estimate:tacos-2"><span class="box" aria-hidden="true">✓</span><span class="t">On <b>Food</b>, tap the camera on <b>Dinner</b>, choose <b>Photo library</b>, pick both taco photos and estimate. The side view finds a third taco, still counted as one meal.</span></li>
-          <li data-on="estimate:tacos-1"><span class="box" aria-hidden="true">✓</span><span class="t">Estimate the top-down taco photo alone and compare: two tacos, lower confidence.</span></li>
+          <li data-on="estimate:tacos-2"><span class="box" aria-hidden="true">✓</span><span class="t">On <b>Food</b>, tap the camera on <b>Dinner</b>, choose <b>Photo library</b>, pick both taco photos and estimate. The whole-plate photo finds a third taco, still counted as one meal.</span></li>
+          <li data-on="estimate:tacos-1"><span class="box" aria-hidden="true">✓</span><span class="t">Estimate the taco close-up alone and compare: a guessed two tacos, lower confidence.</span></li>
           <li data-on="write:/api/estimate/:id/log"><span class="box" aria-hidden="true">✓</span><span class="t">Log the two-photo estimate to Dinner and watch the day's totals update.</span></li>
           <li data-on="checkin:skipped"><span class="box" aria-hidden="true">✓</span><span class="t">Mark Snacks as <b>Didn’t eat this meal</b>.</span></li>
           <li data-on="write:/api/water"><span class="box" aria-hidden="true">✓</span><span class="t">Add a glass of water.</span></li>
@@ -188,9 +188,9 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
         </ul>
       </div>
       <div>
-        <h3>The AI inside, and why these models</h3>
+        <h3>The AI inside, and how the models were tested</h3>
         <ul class="unique">
-          <li><b>Answer translator: Claude Haiku 5.5.</b> The word-by-word check shows where a typed answer differs from the model sentence, but only a language model can say what the learner's own Spanish actually means. Haiku read beginner mistakes best of ten models tried on Oct 28, at about $0.00025 an answer. Gemini 3.1 Flash Lite, at the same price, is the fallback.</li>
+          <li><b>Answer translator: Claude Haiku 5.5, picked Oct 28.</b> The word-by-word check shows where a typed answer differs from the model sentence, but only a language model can say what the learner's own Spanish actually means. Ten models were given the same beginner answers, mistakes included, and compared on how well they read them. Haiku read them best, at about $0.00025 an answer. Gemini 3.1 Flash Lite, at the same price, is the fallback.</li>
           <li>It only ever shows a translation and up to three notes. It never changes a rating or a score, it is sent only the prompt, your answer and the model answers, and it goes quiet offline. It is off in this demo.</li>
           <li><b>No AI where a rule does better.</b> Review timing is the FSRS algorithm, the writing checker is hand-written rules for known slips, and “Say it and check” uses the phone's own Spanish (Mexico) speech recognizer.</li>
         </ul>
@@ -212,6 +212,7 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
   <footer>
     <p><b>What is real.</b> Both phones run the apps' own source code, unmodified, exported for the web with Expo. Claro keeps its state on the device, so it runs here as on the phone (only the optional answer translator, which needs the home server, is off); its demo learner was built by Claro's own scheduling and course code.</p>
     <p><b>What is stood in.</b> Health talks to a server at home. For this page, that real server ran against a throwaway database of invented people while a script tapped through this same build, and the phone replays those recorded answers. Your taps move the replay along, and settings you change are kept on the page; a change the script never made shows the closest recorded result instead. The AI photo estimates are canned answers that the server then processed for real. The browser has no camera roll, notifications or speech recognition, so those use small stand-ins.</p>
+    <p><b>Camera roll photos</b> are real meals from Wikimedia Commons, cropped and resized; the AI answers about them are pre-written. <a href="https://commons.wikimedia.org/wiki/File:Tacos_de_Barba_Birria_6.jpg">Tacos</a> by City Foodsters (<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Oatmeal,_blueberries_and_almond_milk.jpg">Oatmeal</a> by Ann Larie Valentine (<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Caffe_Latte_cup.jpg">Latte</a> by Maksym Kozlenko (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Tomato_sauce_spaghetti,_at_Restaurant_Gusto_(2013.07.13)_2.jpg">Spaghetti</a> by Lombroso (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Salad_bowl_at_Bröd_&_Salt.jpg">Salad</a> by JIP (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Smashed_Avocado_On_Toast_(with_one_poached_egg)_-_Jonny's_2026-01-06.jpg">Avocado toast</a> by Andy Li (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>).</p>
     <p>Left out on purpose: tools without a phone screen (the Gmail organizer, the Spotify playlist jobs) and apps built for work or shared with someone else.</p>
   </footer>
 </div>
