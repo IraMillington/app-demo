@@ -46,4 +46,57 @@
     }, true);
   }
   if (document.head) touchLook(); else document.addEventListener('DOMContentLoaded', touchLook);
+
+  // Dragging with the mouse scrolls, as a finger would, with a little
+  // momentum. A drag does not count as a tap on whatever it started on.
+  function scroller(el, horizontal) {
+    for (; el && el !== document.documentElement; el = el.parentElement) {
+      var cs = getComputedStyle(el);
+      var ov = horizontal ? cs.overflowX : cs.overflowY;
+      if (!/auto|scroll/.test(ov)) continue;
+      if (horizontal ? el.scrollWidth > el.clientWidth + 1 : el.scrollHeight > el.clientHeight + 1) return el;
+    }
+    return document.scrollingElement;
+  }
+  var drag = null, swallowClick = false;
+  document.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    if (e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    drag = { x: e.clientX, y: e.clientY, target: e.target, el: null, moved: false, vx: 0, vy: 0, t: performance.now() };
+  }, true);
+  document.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.moved) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+      drag.moved = true;
+      drag.horizontal = Math.abs(dx) > Math.abs(dy);
+      drag.el = scroller(drag.target, drag.horizontal);
+      document.documentElement.style.userSelect = 'none';
+    }
+    var now = performance.now(), dt = Math.max(1, now - drag.t);
+    if (drag.horizontal) { drag.el.scrollLeft -= dx; drag.vx = dx / dt; }
+    else { drag.el.scrollTop -= dy; drag.vy = dy / dt; }
+    drag.x = e.clientX; drag.y = e.clientY; drag.t = now;
+    e.preventDefault();
+  }, true);
+  document.addEventListener('pointerup', function () {
+    if (!drag) return;
+    var d = drag; drag = null;
+    if (!d.moved) return;
+    document.documentElement.style.userSelect = '';
+    swallowClick = true;
+    setTimeout(function () { swallowClick = false; }, 0);
+    if (performance.now() - d.t > 80) return;
+    var v = Math.max(-40, Math.min(40, (d.horizontal ? d.vx : d.vy) * 16));
+    (function glide() {
+      if (Math.abs(v) < 0.5) return;
+      if (d.horizontal) d.el.scrollLeft -= v; else d.el.scrollTop -= v;
+      v *= 0.94;
+      requestAnimationFrame(glide);
+    })();
+  }, true);
+  document.addEventListener('click', function (e) {
+    if (swallowClick) { swallowClick = false; e.stopPropagation(); e.preventDefault(); }
+  }, true);
 })();

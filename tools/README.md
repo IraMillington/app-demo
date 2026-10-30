@@ -23,7 +23,7 @@ what makes each app different and a "Try this" list.
   `npx expo export --platform web`. The only build-time change is `health-web/metro.config.js`,
   which swaps two phone-only modules for web stand-ins in `health-web/demo-stubs/`:
   `expo-notifications` (no-ops) and `expo-image-picker` (a demo camera roll of the eight
-  drawn photos in `demo-photos/`). `web-polyfills.js` adds an iOS-style `Alert` dialog and
+  real meal photos in `demo-photos/`, credited in its `CREDITS.md` and made by `make-photos.py`). `web-polyfills.js` adds an iOS-style `Alert` dialog and
   one `TextInput` method react-native-web lacks.
 - `demo-env.js` loads before each bundle. It pins "today" to the day the data was
   recorded (any time zone), fills in the saved state a signed-in phone would have, and

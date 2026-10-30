@@ -36,42 +36,40 @@ def item(name, grams, lactose, **n):
 CANNED = {
     "tacos-1": {
         "items": [
-            item("Birria tacos (corn tortilla, beef, cheese)", 240, 0.3, calories=460, protein=30, carbs=34, fat=22, fiber=4, sugar=2, sodium=820, saturated_fat=9, cholesterol=85, calcium=180, iron=3.6, potassium=520, water=120),
-            item("Consomé", 120, 0, calories=60, protein=5, carbs=3, fat=3, sodium=640, potassium=210, water=105),
+            item("Birria tacos (corn tortilla, beef, pickled onion, cilantro)", 240, 0, calories=430, protein=28, carbs=34, fat=20, fiber=4, sugar=3, sodium=760, saturated_fat=7, cholesterol=75, calcium=90, iron=3.4, potassium=500, water=120),
         ],
-        "confidence": "medium",
-        "notes": "Top-down view only: two tacos visible, portion depth assumed. Consomé estimated as half a cup.",
+        "confidence": "low",
+        "notes": "Close-up: one taco in full and the edges of others, so the count is a guess; two assumed.",
     },
     "tacos-2": {
         "items": [
-            item("Birria tacos (corn tortilla, beef, cheese)", 360, 0.5, calories=690, protein=45, carbs=51, fat=33, fiber=6, sugar=3, sodium=1230, saturated_fat=13, cholesterol=128, calcium=270, iron=5.4, potassium=780, water=180),
-            item("Consomé", 120, 0, calories=60, protein=5, carbs=3, fat=3, sodium=640, potassium=210, water=105),
+            item("Birria tacos (corn tortilla, beef, pickled onion, cilantro)", 360, 0, calories=645, protein=42, carbs=51, fat=30, fiber=6, sugar=4, sodium=1140, saturated_fat=10.5, cholesterol=112, calcium=135, iron=5.1, potassium=750, water=180),
         ],
         "confidence": "high",
-        "notes": "Both photos show the same plate. The side view shows three tacos, not two, each counted once. Consomé half a cup.",
+        "notes": "Both photos show the same plate. The whole-plate photo shows three tacos, and the close-up's taco is one of them, so three in all, each counted once.",
     },
     "bowl-1": {
         "items": [
-            item("Oatmeal made with 2% milk", 240, 6.0, calories=250, protein=10, carbs=38, fat=6, fiber=4, sugar=12, sodium=120, calcium=250, iron=2, magnesium=60, potassium=380, water=180),
-            item("Mixed berries", 70, 0, calories=35, carbs=8, fiber=2.5, sugar=5, vitamin_c=20, potassium=80, water=60),
-            item("Honey", 7, 0, calories=21, carbs=6, sugar=6),
+            item("Oatmeal made with almond milk", 240, 0, calories=200, protein=6, carbs=32, fat=5, fiber=4, sugar=1, sodium=150, calcium=200, iron=2, magnesium=60, potassium=200, water=200),
+            item("Blueberries", 40, 0, calories=23, carbs=6, fiber=1, sugar=4, vitamin_c=4, potassium=30, water=34),
+            item("Walnuts", 15, 0, calories=98, protein=2.3, carbs=2, fat=9.8, fiber=1, magnesium=24, potassium=66),
         ],
         "confidence": "medium",
-        "notes": "Top-down view: bowl depth unknown, assumed one cup of oatmeal made with milk.",
+        "notes": "Close-up: the bowl's size is not visible, so one cup of oatmeal is assumed.",
     },
     "bowl-2": {
         "items": [
-            item("Oatmeal made with 2% milk", 360, 9.0, calories=375, protein=15, carbs=57, fat=9, fiber=6, sugar=18, sodium=180, calcium=375, iron=3, magnesium=90, potassium=570, water=270),
-            item("Mixed berries", 70, 0, calories=35, carbs=8, fiber=2.5, sugar=5, vitamin_c=20, potassium=80, water=60),
-            item("Honey", 7, 0, calories=21, carbs=6, sugar=6),
+            item("Oatmeal made with almond milk", 360, 0, calories=300, protein=9, carbs=48, fat=7.5, fiber=6, sugar=1.5, sodium=225, calcium=300, iron=3, magnesium=90, potassium=300, water=300),
+            item("Blueberries", 40, 0, calories=23, carbs=6, fiber=1, sugar=4, vitamin_c=4, potassium=30, water=34),
+            item("Walnuts", 15, 0, calories=98, protein=2.3, carbs=2, fat=9.8, fiber=1, magnesium=24, potassium=66),
         ],
         "confidence": "high",
-        "notes": "Two views of one bowl. The side view shows a deep bowl, so about 1.5 cups of oatmeal, counted once.",
+        "notes": "Two views of one bowl. Next to the spoon the bowl is large, so about 1.5 cups of oatmeal, counted once.",
     },
     "latte-1": {
-        "items": [item("Oat-milk latte", 355, 0, calories=150, protein=3, carbs=22, fat=6, sugar=10, sodium=120, calcium=350, caffeine=150, potassium=330, water=320)],
+        "items": [item("Latte with whole milk", 355, 14, calories=180, protein=10, carbs=15, fat=9, sugar=14, sodium=140, calcium=380, caffeine=130, potassium=450, water=320)],
         "confidence": "medium",
-        "notes": "12 oz cup assumed; foam suggests oat milk from the menu board, so no lactose.",
+        "notes": "12 oz cup and whole milk assumed.",
     },
     "pasta-1": {
         "items": [
@@ -79,25 +77,26 @@ CANNED = {
             item("Parmesan", 5, 0.1, calories=22, protein=2, fat=1.5, calcium=60, sodium=80),
         ],
         "confidence": "medium",
-        "notes": "About 1.5 cups of cooked pasta with marinara and a spoon of parmesan.",
+        "notes": "About 1.5 cups of cooked spaghetti with tomato sauce and a spoon of parmesan.",
     },
     "salad-1": {
         "items": [
-            item("Mixed greens and tomato", 150, 0, calories=45, protein=3, carbs=8, fiber=3, vitamin_a=4000, vitamin_c=25, vitamin_k=120, potassium=420, water=135),
-            item("Croutons", 15, 0, calories=60, protein=2, carbs=10, fat=2, sodium=150),
-            item("Ranch dressing", 30, 0.8, calories=130, protein=0.5, carbs=2, fat=13, sodium=270, saturated_fat=2),
+            item("Chicken breast with curry sauce", 120, 0, calories=200, protein=30, carbs=4, fat=7, sodium=420, potassium=350, water=80),
+            item("Green olives", 30, 0, calories=44, fat=4.5, sodium=470),
+            item("Peanuts", 20, 0, calories=115, protein=5, carbs=3, fat=10, fiber=2, magnesium=34, potassium=130),
+            item("Greens, red cabbage and peppers", 100, 0, calories=30, protein=1.5, carbs=6, fiber=2.5, vitamin_a=2500, vitamin_c=60, vitamin_k=60, potassium=300, water=90),
         ],
         "confidence": "medium",
-        "notes": "Dressing assumed 2 tbsp of ranch.",
+        "notes": "Curry sauce estimated at 2 tbsp and counted with the chicken.",
     },
     "toast-1": {
         "items": [
-            item("Sourdough toast", 45, 0, calories=120, protein=4, carbs=23, fat=1, fiber=1, sodium=230),
-            item("Avocado", 50, 0, calories=80, protein=1, carbs=4, fat=7, fiber=3, potassium=240),
-            item("Fried egg", 50, 0, calories=90, protein=6, fat=7, cholesterol=185, sodium=95),
+            item("Sourdough toast", 70, 0, calories=190, protein=7, carbs=36, fat=1.5, fiber=2, sodium=360),
+            item("Smashed avocado", 70, 0, calories=112, protein=1.4, carbs=6, fat=10, fiber=5, potassium=340),
+            item("Poached egg", 50, 0, calories=72, protein=6.3, fat=4.8, cholesterol=186, sodium=70),
         ],
         "confidence": "high",
-        "notes": "One slice of toast with a third of an avocado and a fried egg.",
+        "notes": "One large slice of sourdough with about half an avocado, a poached egg and microgreens.",
     },
 }
 

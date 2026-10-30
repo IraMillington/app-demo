@@ -1,13 +1,13 @@
-// Web stand-in for expo-image-picker: a demo camera roll of invented meal photos,
+// Web stand-in for expo-image-picker: a demo camera roll of real meal photos (Wikimedia Commons, see demo-photos/CREDITS.md),
 // so the real photo-estimate screen has something to pick from in a browser.
 // Which photos were picked is exposed as window.__demoPicked for the demo server.
 
 const PHOTOS = [
-  { id: 'tacos', day: 'Today', label: 'Tacos, from above' },
-  { id: 'tacosSide', day: 'Today', label: 'Tacos, from the side' },
+  { id: 'tacos', day: 'Today', label: 'Tacos, close-up' },
+  { id: 'tacosSide', day: 'Today', label: 'Tacos, whole plate' },
   { id: 'latte', day: 'Today', label: 'Latte' },
-  { id: 'bowl', day: 'Yesterday', label: 'Oatmeal, from above' },
-  { id: 'bowlSide', day: 'Yesterday', label: 'Oatmeal, from the side' },
+  { id: 'bowl', day: 'Yesterday', label: 'Oatmeal, close-up' },
+  { id: 'bowlSide', day: 'Yesterday', label: 'Oatmeal, whole bowl' },
   { id: 'pasta', day: 'Yesterday', label: 'Spaghetti' },
   { id: 'salad', day: 'Tuesday', label: 'Salad' },
   { id: 'toast', day: 'Tuesday', label: 'Avocado toast' },
