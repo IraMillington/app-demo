@@ -6,9 +6,7 @@ what makes each app different and a "Try this" list.
 
 - **Public site:** https://iramillington.github.io/app-demo/ (GitHub Pages from the top of
   this repo's `main`; `tools/` holds what builds it, `build.json` says which app commits it shows).
-- **Automatic rebuilding is off for now** (out of Actions minutes, Oct 30): the schedule
-  and push triggers are commented out in the workflow and the site is built locally with
-  `ci/build.sh` and published with `ci/publish.sh`. When on, `.github/workflows/rebuild.yml` every three hours
+- **Automatic rebuilding:** `.github/workflows/rebuild.yml` every three hours
   checks whether health-app (`master`) or claro-spanish (`main`) moved, and if so runs
   `ci/build.sh` and `ci/publish.sh`, which commits the new site to `main`. A push to `tools/`
   or a manual run always rebuilds. One secret, `DEMO_TOKEN` (read access to the two app

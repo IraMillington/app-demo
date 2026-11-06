@@ -8,12 +8,10 @@
 # and claro-spanish. Pushing here uses the workflow's own token.
 name: Rebuild the demo
 
-# The schedule and the push trigger are off while the account is out of
-# Actions minutes; the site is built locally with tools/ci/build.sh and
-# published with tools/ci/publish.sh. Restore them to turn rebuilding back on:
-#   schedule: [{cron: "23 */3 * * *"}]
-#   push: {branches: [main], paths: ["tools/**", ".github/workflows/rebuild.yml"]}
+# This repo is public, so its Actions runs do not use the account's minutes.
 on:
+  schedule: [{cron: "23 */3 * * *"}]
+  push: {branches: [main], paths: ["tools/**", ".github/workflows/rebuild.yml"]}
   workflow_dispatch:
 
 concurrency:
