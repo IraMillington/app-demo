@@ -1,8 +1,9 @@
 # Phone app demo site
 
 A static page that runs Ira's three iPhone apps, **Health** (`health-app` repo),
-**Recipes** (`recipes-app`) and **Claro** (`claro-spanish`), inside phone frames on
-invented data, with notes on what makes each app different, how they connect, how AI is
+**Recipes** (`recipes-app`) and **Claro** (`claro-spanish`), plus **PickleCourts**
+(`Juniper-Lane-Software/okc-courts-app`, co-developed; the other co-developer agreed to it
+being shown), inside phone frames on invented data, with notes on what makes each app different, how they connect, how AI is
 used, and "Try this" lists. It is written for people hiring for AI engineering roles.
 
 - **Public site:** https://iramillington.github.io/app-demo/ (GitHub Pages from the top of
@@ -65,6 +66,29 @@ used, and "Try this" lists. It is written for people hiring for AI engineering r
   screen and the "Try this" actions, saving each exchange.
 - Not in this repo: the app sources. The built bundles are published (publicly, by
   Ira's choice) at the top of `main`.
+
+## PickleCourts (a committed snapshot)
+
+The workflow's fine-grained `DEMO_TOKEN` can only cover one owner's repos, so CI cannot
+check PickleCourts out. Its web build (`picklecourts/dist-web`), recorded tour
+(`pc-recordings.json`) and MCP transcript (`pc-mcp.json`) are committed, and `build-site.js`
+adds the phone only when they exist. They keep their own recorded day (`pc-mcp.json`
+`demo_date`) and their own replay position (`sessionStorage` `demo_replay_pc`).
+Rebuild them by hand with `ci/pc-snapshot.sh <okc-courts-app checkout>` (Nov 6: f3d96ef).
+
+- The real Node API (`stack/run-picklecourts.sh`, `env -i`, `STRIPE_MOCK_MODE=true`, every
+  outside integration unset) runs on a throwaway `pc_demo` database: its own migrations and
+  dev seed, then `stack/picklecourts_demo.sql`, which **unpublishes every seeded venue**
+  (they are real businesses) and adds three invented OKC clubs cloned from the seed's test venue.
+- The build points at `https://picklecourts-demo.invalid`, so nothing can reach the live
+  service. It is exported with `baseUrl` `/app-demo/picklecourts` (the Pages path; the local
+  check serves the site under `srv/app-demo/` for the same reason), and
+  `picklecourts-web/app-path.js` sets the frame's address to `/app/`, the app's legacy prefix,
+  because its router reads regions from the path. `picklecourts-web/no-maps.js` reports the
+  Google Maps script as failed (there is no key), so the app falls back to its list.
+- `pc-tour.js` browses, books 6 PM at Lanternfield through mock checkout, then calls the
+  server's MCP endpoint (`search_venues`, `find_availability_by_venue`). The page renders
+  that transcript and says plainly that no model is in the loop.
 
 ## Rebuilding
 

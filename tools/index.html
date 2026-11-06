@@ -14,6 +14,7 @@
   --health: #174B3B;
   --claro: #D9533F;
   --recipes: #9C3F1E;
+  --pc: #1D3B5E;
   --done: #28745B;
   --display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
   --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -22,12 +23,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #111916; --ink: #E6EEE9; --ink-soft: #9DB0A6; --rule: #2A3732; --panel: #17221E;
-    --health: #8CCBB2; --claro: #FF9A86; --recipes: #DE8761; --done: #8CCBB2; color-scheme: dark;
+    --health: #8CCBB2; --claro: #FF9A86; --recipes: #DE8761; --pc: #9DBFE6; --done: #8CCBB2; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #111916; --ink: #E6EEE9; --ink-soft: #9DB0A6; --rule: #2A3732; --panel: #17221E;
-  --health: #8CCBB2; --claro: #FF9A86; --recipes: #DE8761; --done: #8CCBB2; color-scheme: dark;
+  --health: #8CCBB2; --claro: #FF9A86; --recipes: #DE8761; --pc: #9DBFE6; --done: #8CCBB2; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body {
@@ -50,7 +51,7 @@ section.app { border-top: 1px solid var(--rule); padding-block: 48px; display: g
 .story { display: grid; gap: 22px; min-width: 0; }
 .story h2 { font-family: var(--display); font-size: clamp(30px, 4vw, 42px); margin: 0; line-height: 1.05; letter-spacing: -.015em; }
 .story .tag { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
-#health .tag { color: var(--health); } #claro .tag { color: var(--claro); } #recipes .tag { color: var(--recipes); }
+#health .tag { color: var(--health); } #claro .tag { color: var(--claro); } #recipes .tag { color: var(--recipes); } #picklecourts .tag { color: var(--pc); }
 .story p { margin: 0; max-width: 62ch; }
 .story h3 { font-family: var(--display); font-weight: 700; font-size: 20px; margin: 0 0 10px; }
 .unique { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
@@ -85,6 +86,19 @@ section.band > p { margin: 0; max-width: 70ch; }
 .flow .dash { stroke-dasharray: 4 4; }
 .flow .head { fill: var(--ink-soft); }
 a { color: inherit; text-underline-offset: 2px; }
+.mcp { display: grid; gap: 10px; }
+.mcp .turn { background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; min-width: 0; }
+.mcp .who { font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.mcp code, .mcp pre { font-family: var(--mono); font-size: 12.5px; }
+.mcp pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.mcp table { border-collapse: collapse; font-size: 14px; width: 100%; }
+.mcp td, .mcp th { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.mcp th { font-weight: 600; color: var(--ink-soft); font-size: 12.5px; }
+.mcp details summary { cursor: pointer; font-size: 13px; color: var(--ink-soft); }
+.mcp details pre { max-height: 260px; overflow: auto; margin-top: 6px; }
+.tools { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tools li { padding-left: 16px; border-left: 2px solid var(--rule); max-width: 64ch; }
+.tools code { font-family: var(--mono); font-size: 13px; font-weight: 500; }
 @media (max-width: 860px) {
   section.app { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .phone-col { position: static; }
@@ -99,8 +113,8 @@ a { color: inherit; text-underline-offset: 2px; }
 .fit { flex: 1; position: relative; overflow: hidden; margin-bottom: 20px; }
 .screen::after { content: ""; position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; background: #111; opacity: .8; }
 .fit iframe { position: absolute; top: 0; left: 0; width: 375px; border: 0; transform-origin: 0 0; background: transparent; }
-.h-screen { background: #FCFDFC; } .c-screen { background: #fff; } .r-screen { background: #fff; }
-.status { background: var(--app-top); } .h-screen { --app-top: #F2F4F3; } .c-screen { --app-top: #F6F4EE; } .r-screen { --app-top: #fff; }
+.h-screen { background: #FCFDFC; } .c-screen { background: #fff; } .r-screen { background: #fff; } .p-screen { background: #F7F8FA; }
+.status { background: var(--app-top); } .h-screen { --app-top: #F2F4F3; } .c-screen { --app-top: #F6F4EE; } .r-screen { --app-top: #fff; } .p-screen { --app-top: #F7F8FA; }
 .caption { font-size: 13px; color: var(--ink-soft); text-align: center; max-width: 320px; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: #74827C; }
 @media (max-width: 360px) { .phone { width: 100%; } }
@@ -110,18 +124,19 @@ a { color: inherit; text-underline-offset: 2px; }
 <script>
 // Each visit starts fresh: the three phones share one replay position and the
 // apps' saved state, all kept for this origin. Runs before the phones load.
-try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e) {}
+try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionStorage.removeItem('demo_replay_pc'); } catch (e) {}
 </script>
 <div class="wrap">
   <header class="top">
     <div class="eyebrow">Ira Millington · interactive demo</div>
-    <h1>Three iPhone apps, built with AI, running live</h1>
-    <p class="lede">Ira builds and runs these apps with Claude Code and Codex: three iPhone apps, their servers, and the home server they run on. Each phone below runs the real app, the same source code that ships to Ira's iPhone, built for the browser. Only the data is invented, and the three phones talk to each other the way the real apps do.</p>
+    <h1>iPhone apps built with AI, running live</h1>
+    <p class="lede">Ira builds and runs these apps with Claude Code and Codex: three iPhone apps, their servers, and the home server they run on. Each phone below runs the real app, the same source code that ships to Ira's iPhone, built for the browser. Only the data is invented, and the first three phones talk to each other the way the real apps do. The fourth is PickleCourts, a court-booking app Ira co-develops, where Ira built the tools that let AI assistants search and book.</p>
     <nav class="jump" aria-label="Sections">
       <a href="#connect"><span class="dot" style="background: var(--ink-soft)"></span>How they connect</a>
       <a href="#health"><span class="dot" style="background: var(--health)"></span>Health</a>
       <a href="#recipes"><span class="dot" style="background: var(--recipes)"></span>Recipes</a>
       <a href="#claro"><span class="dot" style="background: var(--claro)"></span>Claro</a>
+      <a href="#picklecourts"><span class="dot" style="background: var(--pc)"></span>PickleCourts</a>
       <a href="#ai"><span class="dot" style="background: var(--ink-soft)"></span>How AI is used</a>
     </nav>
     <p class="note">Everything here is invented: the people, meals, recipes, photos, workouts and scores. Nothing you do on this page is sent anywhere. The demo is set on {{DEMO_DAY}}, the day its data was recorded.</p>
@@ -336,6 +351,54 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e
     </div>
   </section>
 
+  <section class="app" id="picklecourts" aria-labelledby="pc-h">
+    <div class="phone-col">
+      <div class="phone" role="region" aria-label="PickleCourts app, running live">
+        <div class="screen p-screen">
+          <div class="island"></div>
+          <div class="status"><span>11:30</span><span class="sig" aria-hidden="true">●●●● ▮</span></div>
+          <div class="fit"><div class="loading">Starting PickleCourts…</div><iframe id="p-frame" title="PickleCourts app" src="picklecourts/"></iframe></div>
+        </div>
+      </div>
+      <div class="caption">Three invented Oklahoma City clubs, recorded on {{PC_DAY}}. Payment runs in the server's mock mode: nothing is charged.</div>
+      <button class="reset" type="button" data-reset>Start the demo over</button>
+    </div>
+    <div class="story">
+      <div>
+        <div class="tag">PickleCourts · co-developed · Expo / React Native · iPhone and web</div>
+        <h2 id="pc-h">Book a pickleball court, from the app or from an AI assistant</h2>
+      </div>
+      <p><a href="https://picklecourts.rent">PickleCourts</a> is a court-booking marketplace that Ira co-develops with one other developer. It shows open times across clubs that run different booking systems and books them in one checkout. This phone runs its consumer app against its real Node server and Postgres on a throwaway database. The clubs, prices and booking below are invented.</p>
+      <div>
+        <h3>Ira's part: tools for AI agents</h3>
+        <ul class="unique">
+          <li><b>An MCP server assistants can call.</b> The other co-developer built the first read-only version. Ira added venue search, account linking (OAuth with PKCE, rotating refresh tokens) and the booking tools on top of the same server, so Claude, ChatGPT or any MCP client can find a court and book it.</li>
+          <li><b>Booking that can't go wrong twice.</b> An assistant first gets a priced quote, and booking needs that quote's single-use confirmation token. It can't book twice, or book something you didn't confirm, and the tokens are revoked when you reset your password.</li>
+          <li><b>A plugin with a booking skill.</b> A packaged plugin for ChatGPT and Claude carries a short skill that tells the assistant the steps: pin down place and date, search, offer two or three concrete times with prices, and never say a court is booked until checkout is finished.</li>
+          <li><b>Where it is.</b> Search has been listed in Claude's connector directory since Oct 12, at <code>https://api.picklecourts.rent/mcp</code>. The ChatGPT plugin with booking is in OpenAI's review. Booking stays off in the Claude directory until payments are approved there.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The tools an assistant sees</h3>
+        <ul class="tools" id="pc-tools"><li>Loading…</li></ul>
+      </div>
+      <div>
+        <h3>What an assistant gets back</h3>
+        <p class="note">These are the real server's answers on the demo data, called in order the way the skill says to. No language model is in this loop; the request in quotes is an example of what would lead an assistant to these calls. Booking needs a signed-in account, so it isn't shown.</p>
+        <div class="mcp" id="pc-mcp"></div>
+      </div>
+      <div>
+        <h3>Try this</h3>
+        <ol class="try" id="p-try">
+          <li data-on="picklecourts:read:/api/venues/cottonwood-court-house"><span class="box" aria-hidden="true">✓</span><span class="t">Open <b>Cottonwood Court House</b> and switch the day to <b>Tmrw</b>.</span></li>
+          <li data-on="picklecourts:read:/api/venues/lanternfield-paddle-club"><span class="box" aria-hidden="true">✓</span><span class="t">Go back and open <b>Lanternfield Paddle Club</b>: peak prices start at 5 PM.</span></li>
+          <li data-on="picklecourts:read:/api/native/stripe/config"><span class="box" aria-hidden="true">✓</span><span class="t">Pick <b>6:00 PM</b> and continue to checkout.</span></li>
+          <li data-on="picklecourts:write:/api/native/bookings/checkout"><span class="box" aria-hidden="true">✓</span><span class="t">Fill in any name, email and phone, then <b>Continue to Payment</b> for a confirmation.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <section class="band" id="ai" aria-labelledby="ai-h">
     <h2 id="ai-h">How AI is used, in building and in the apps</h2>
     <div class="cols">
@@ -353,15 +416,15 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e
       </div>
       <div>
         <h3>Tools for AI agents: PickleCourts</h3>
-        <p>Ira is a co-developer of <a href="https://picklecourts.rent">PickleCourts</a>, a court-booking marketplace. On top of the read-only MCP server built by the other co-developer, Ira added venue search, account linking (OAuth), the booking tools and a plugin with a booking skill for Claude and ChatGPT. Booking needs a single-use confirmation token from a priced quote, so an assistant can't book twice or book something you didn't confirm. Search has been live in Claude's connector directory since Oct 12; the ChatGPT plugin with booking is in OpenAI's review.</p>
+        <p>On <a href="https://picklecourts.rent">PickleCourts</a>, which Ira co-develops, Ira built the MCP booking tools, account linking and a plugin with a booking skill, so assistants can find and book courts safely. The <a href="#picklecourts">PickleCourts phone</a> shows the tools and their real answers on demo data.</p>
       </div>
     </div>
     <p class="note"><b>Not built yet:</b> a dedicated evaluation suite for these AI features. The model choices rest on the one-off tests above, and the plugin's reviewer test prompts (five that should trigger tools, three that shouldn't) are the start of one for booking.</p>
   </section>
 
   <footer>
-    <p><b>What is real.</b> All three phones run the apps' own source code, unmodified, exported for the web with Expo. Claro keeps its state on the device, so it runs here as on the phone (the optional answer translator, which needs the home server, is off); its demo learner was built by Claro's own scheduling and course code.</p>
-    <p><b>What is stood in.</b> Health and Recipes talk to servers at home. For this page, those real servers ran against throwaway databases of invented people while a script tapped through these same builds, and the phones replay the recorded answers. The three phones share one recording, so a change in one shows up in the others. Your taps move the replay along, and settings you change are kept on the page; a change the script never made shows the closest recorded result instead. Reloading the page starts everything over. The AI photo estimates are canned answers that the server then processed for real. The browser has no camera roll, notifications or speech recognition, so those use small stand-ins.</p>
+    <p><b>What is real.</b> All four phones run the apps' own source code, unmodified, exported for the web with Expo. Claro keeps its state on the device, so it runs here as on the phone (the optional answer translator, which needs the home server, is off); its demo learner was built by Claro's own scheduling and course code.</p>
+    <p><b>What is stood in.</b> Health and Recipes talk to servers at home. For this page, those real servers ran against throwaway databases of invented people while a script tapped through these same builds, and the phones replay the recorded answers. The three phones share one recording, so a change in one shows up in the others. Your taps move the replay along, and settings you change are kept on the page; a change the script never made shows the closest recorded result instead. Reloading the page starts everything over. PickleCourts was recorded the same way against its own server, with payment in the server's mock mode, and keeps a separate replay; its other venues in the development data are real clubs, so they were hidden and three invented clubs added. The AI photo estimates are canned answers that the server then processed for real. The browser has no camera roll, notifications or speech recognition, so those use small stand-ins.</p>
     <p><b>Camera roll photos</b> are real meals from Wikimedia Commons, cropped and resized; the AI answers about them are pre-written. <a href="https://commons.wikimedia.org/wiki/File:Tacos_de_Barba_Birria_6.jpg">Tacos</a> by City Foodsters (<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Oatmeal,_blueberries_and_almond_milk.jpg">Oatmeal</a> by Ann Larie Valentine (<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Caffe_Latte_cup.jpg">Latte</a> by Maksym Kozlenko (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Tomato_sauce_spaghetti,_at_Restaurant_Gusto_(2013.07.13)_2.jpg">Spaghetti</a> by Lombroso (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Salad_bowl_at_Bröd_&_Salt.jpg">Salad</a> by JIP (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Smashed_Avocado_On_Toast_(with_one_poached_egg)_-_Jonny's_2026-01-06.jpg">Avocado toast</a> by Andy Li (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>).</p>
     <p>The Instant Pot recipes are Ira's own. Left out on purpose: tools without a phone screen (the Gmail organizer, the Spotify playlist jobs) and apps built for work.</p>
   </footer>
@@ -402,7 +465,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e
   show();
   window.addEventListener('message', function (e) {
     var m = e.data;
-    if (!m || ['health', 'recipes', 'claro'].indexOf(m.demo) < 0) return;
+    if (!m || ['health', 'recipes', 'claro', 'picklecourts'].indexOf(m.demo) < 0) return;
     var path = (m.path || '').split('?')[0].replace(ID, ':id');
     if (m.kind === 'read' || m.kind === 'write') mark(m.demo + ':' + m.kind + ':' + path);
     if (m.demo === 'claro' && m.kind === 'write' && path === '/api/practice/minutes') claroSent = true;
@@ -419,15 +482,56 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e
     }
   });
 
-  // One shared replay, so starting over restarts all three phones together.
+  // Starting over restarts every phone together.
   document.querySelectorAll('[data-reset]').forEach(function (b) {
     b.addEventListener('click', function () {
-      try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e) {}
+      try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionStorage.removeItem('demo_replay_pc'); } catch (e) {}
       items.forEach(function (li) { li.classList.remove('done'); });
       claroSent = false;
       show();
       document.querySelectorAll('.fit iframe').forEach(function (f) { f.src = f.getAttribute('src'); });
     });
   });
+})();
+</script>
+<script>
+// The PickleCourts tool calls, rendered from the recorded MCP exchange.
+(function () {
+  var toolsEl = document.getElementById('pc-tools'), out = document.getElementById('pc-mcp');
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function money(c) { return '$' + (c / 100).toFixed(c % 100 ? 2 : 0); }
+  function clock(t) { var h = +t.slice(0, 2), m = t.slice(3); return ((h + 11) % 12 + 1) + ':' + m + (h < 12 ? ' AM' : ' PM'); }
+  function table(head, rows) {
+    var t = el('table'), tr = el('tr');
+    head.forEach(function (h) { tr.appendChild(el('th', null, h)); });
+    t.appendChild(tr);
+    rows.forEach(function (r) { var row = el('tr'); r.forEach(function (c) { row.appendChild(el('td', null, c)); }); t.appendChild(row); });
+    return t;
+  }
+  function turn(who, body) { var d = el('div', 'turn'); d.appendChild(el('div', 'who', who)); body.forEach(function (b) { d.appendChild(b); }); out.appendChild(d); }
+  fetch('picklecourts/mcp.json').then(function (r) { return r.json(); }).then(function (j) {
+    toolsEl.textContent = '';
+    j.tools.forEach(function (t) {
+      var li = el('li'); li.appendChild(el('code', null, t.name)); li.appendChild(document.createTextNode(' · ' + (t.title || '')));
+      toolsEl.appendChild(li);
+    });
+    var booking = el('li'); booking.appendChild(el('code', null, 'prepare_booking, book_court, list_my_bookings'));
+    booking.appendChild(document.createTextNode(' · after the person links their account; not in this demo'));
+    toolsEl.appendChild(booking);
+    var search = j.calls[0], avail = j.calls[1];
+    var sr = JSON.parse(search.result.content[0].text), ar = JSON.parse(avail.result.content[0].text);
+    turn('Example request', [el('p', null, '“Find me a pickleball court in Oklahoma City tomorrow around 6 PM.”')]);
+    turn('Tool call', [el('pre', null, search.name + ' ' + JSON.stringify(search.arguments))]);
+    turn('Result', [table(['Venue', 'Away', 'Courts', 'Books'], sr.venues.map(function (v) {
+      return [v.name, v.distance_miles + ' mi', String(v.court_count), v.booking_support];
+    }))]);
+    turn('Tool call', [el('pre', null, avail.name + ' ' + JSON.stringify(avail.arguments))]);
+    turn('Result', [table(['Starts', 'Courts open', 'Price, 1 hr'], ar.slots.map(function (s) {
+      return [clock(s.start_time_local), String(s.available_court_count), money(s.rental_subtotal_cents)];
+    })), el('p', 'note', 'Each slot also carries a booking_url that opens checkout with that exact time selected. The assistant hands it over and does not say the court is booked.')]);
+    var raw = el('details'); raw.appendChild(el('summary', null, 'Raw JSON for both calls'));
+    raw.appendChild(el('pre', null, JSON.stringify(j.calls.map(function (c) { return { tool: c.name, arguments: c.arguments, result: JSON.parse(c.result.content[0].text) }; }), null, 1)));
+    var d = el('div', 'turn'); d.appendChild(raw); out.appendChild(d);
+  }).catch(function () { toolsEl.textContent = ''; out.textContent = 'The tool transcript did not load.'; });
 })();
 </script>

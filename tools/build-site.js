@@ -12,6 +12,9 @@ const DEMO_DATE = process.env.DEMO_DATE || '2026-10-30';
 const DAY = DEMO_DATE.split('-').map(Number).map((n, i) => (i === 1 ? n - 1 : n));
 const DAY_LABEL = new Date(Date.UTC(DAY[0], DAY[1], DAY[2], 12)).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
 const API_HOST = 'https://health.tailc51c3c.ts.net';
+// PickleCourts' build points at a host that does not exist, so a call the
+// replay misses can never reach the live service.
+const PC_HOST = 'https://picklecourts-demo.invalid';
 
 fs.rmSync(out, { recursive: true, force: true });
 
@@ -24,25 +27,25 @@ function copyTree(src, dst) {
 }
 
 // The export uses root-absolute paths; the site serves each app from a subfolder.
-function relativize(dir) {
+function relativize(dir, base = '') {
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
     const p = path.join(d, e.name);
     if (e.isDirectory()) return walk(p);
     if (!/\.(js|html)$/.test(e.name)) return;
     const s = fs.readFileSync(p, 'utf8');
-    const t = s.replace(/"\/(_expo|assets)\//g, '"./$1/');
+    const t = s.replace(new RegExp('"' + base + '/(_expo|assets|fonts)/', 'g'), '"./$1/');
     if (t !== s) fs.writeFileSync(p, t);
   });
   walk(dir);
 }
 
-function app(name, storage, extra, vars = {}) {
+function app(name, storage, extra, vars = {}, base = '') {
   const dir = path.join(out, name);
   copyTree(path.join(HERE, name, 'dist-web'), dir);
-  relativize(dir);
+  if (base !== null) relativize(dir, base);
   fs.copyFileSync(path.join(HERE, 'demo-env.js'), path.join(dir, 'demo-env.js'));
   for (const [from, to] of extra) fs.copyFileSync(from, path.join(dir, to));
-  const config = `<script>window.__DEMO_DAY=${JSON.stringify(DAY)};window.__DEMO_API_HOST=${JSON.stringify(API_HOST)};window.__DEMO_STORAGE=${JSON.stringify(storage)};${Object.entries(vars).map(([k, v]) => `window.${k}=${JSON.stringify(v)};`).join('')}</script>`;
+  const config = `<script>window.__DEMO_DAY=${JSON.stringify(DAY)};window.__DEMO_API_HOST=${JSON.stringify(vars.__DEMO_API_HOST || API_HOST)};window.__DEMO_STORAGE=${JSON.stringify(storage)};${Object.entries(vars).map(([k, v]) => `window.${k}=${JSON.stringify(v)};`).join('')}</script>`;
   const scripts = ['demo-env.js', ...extra.filter(([, to]) => to.endsWith('.js')).map(([, to]) => to)].map((s) => `<script src="./${s}"></script>`).join('');
   const index = path.join(dir, 'index.html');
   fs.writeFileSync(index, fs.readFileSync(index, 'utf8').replace('</head>', `  ${config}${scripts}\n  </head>`));
@@ -58,7 +61,20 @@ app('health', { account_token: 'demo', profile: sam.id, onboarding_complete_v1: 
 app('recipes', recipesStorage('demo', 'demo'), replay, shared('recipes'));
 app('claro', claroStorage(path.join(HERE, 'claro-seed.json'), 'demo', DEMO_DATE), replay, shared('claro'));
 fs.copyFileSync(path.join(HERE, 'recordings.json'), path.join(out, 'recordings.json'));
-fs.writeFileSync(path.join(out, 'index.html'), fs.readFileSync(outer, 'utf8').replace(/\{\{DEMO_DAY\}\}/g, DAY_LABEL));
+// PickleCourts has its own recording and replay position: it shares nothing with the others.
+// Its router needs its real path, so it is exported with baseUrl /app-demo/picklecourts
+// (the GitHub Pages path) and not relativized. It is a snapshot recorded on its own day (CI cannot check the repo out), so it keeps that day.
+let PC_LABEL = DAY_LABEL;
+if (fs.existsSync(path.join(HERE, 'pc-recordings.json'))) {
+  const pcDate = JSON.parse(fs.readFileSync(path.join(HERE, 'pc-mcp.json'), 'utf8')).demo_date;
+  const pcDay = pcDate.split('-').map(Number).map((n, i) => (i === 1 ? n - 1 : n));
+  PC_LABEL = new Date(Date.UTC(pcDay[0], pcDay[1], pcDay[2], 12)).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
+  app('picklecourts', {}, [...replay, [path.join(HERE, 'picklecourts-web', 'no-maps.js'), 'no-maps.js'], [path.join(HERE, 'picklecourts-web', 'app-path.js'), 'app-path.js']],
+    { __DEMO_DAY: pcDay, __DEMO_APP: 'picklecourts', __DEMO_RECORDINGS: 'recordings.json', __DEMO_REPLAY_KEY: 'demo_replay_pc', __DEMO_API_HOST: PC_HOST }, null);
+  fs.copyFileSync(path.join(HERE, 'pc-recordings.json'), path.join(out, 'picklecourts', 'recordings.json'));
+  fs.copyFileSync(path.join(HERE, 'pc-mcp.json'), path.join(out, 'picklecourts', 'mcp.json'));
+}
+fs.writeFileSync(path.join(out, 'index.html'), fs.readFileSync(outer, 'utf8').replace(/\{\{DEMO_DAY\}\}/g, DAY_LABEL).replace(/\{\{PC_DAY\}\}/g, PC_LABEL));
 
 const files = [];
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).forEach((e) => { const p = path.join(d, e.name); e.isDirectory() ? walk(p) : files.push(path.relative(out, p)); });

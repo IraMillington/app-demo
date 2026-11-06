@@ -16,3 +16,9 @@ recipes/
 stack/venv-recipes/
 stack/storage-recipes/
 stack/links.json
+# PickleCourts: only its web build is committed (CI cannot check the repo out)
+picklecourts/*
+!picklecourts/dist-web/
+pc-serve/
+pc-tour.log
+srv/

@@ -5,10 +5,15 @@ import json
 import re
 import sys
 
-recs = json.load(open(sys.argv[1]))
-text = json.dumps(recs)
+# Usage: check_recordings.py <file> [minimum exchanges, default 60]. A file
+# that is not a list of exchanges (the PickleCourts tool transcript) is only
+# checked for names and credentials.
+data = json.load(open(sys.argv[1]))
+recs = data if isinstance(data, list) else []
+minimum = int(sys.argv[2]) if len(sys.argv) > 2 else 60
+text = json.dumps(data)
 problems = []
-if len(recs) < 60:
+if isinstance(data, list) and len(recs) < minimum:
     problems.append(f"only {len(recs)} exchanges recorded")
 for e in recs:
     if e["status"] >= 500:
@@ -26,4 +31,4 @@ for pattern in [r"@gmail", r"sk-or-", r"Bearer ", r"\"token\"", r"password"]:
         problems.append(f"recording contains {pattern!r}")
 if problems:
     sys.exit("recordings rejected:\n  " + "\n  ".join(problems))
-print(f"recordings ok: {len(recs)} exchanges")
+print(f"recordings ok: {sys.argv[1]}, {len(recs)} exchanges")

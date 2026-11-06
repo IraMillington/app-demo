@@ -62,8 +62,9 @@ echo "::endgroup::"
 
 echo "::group::Assemble and check the site"
 node build-site.js index.html site
-(nohup python3 -m http.server 8420 --bind 127.0.0.1 > /dev/null 2>&1 &)
+mkdir -p srv && ln -sfn ../site srv/app-demo
+(nohup python3 -m http.server 8420 --bind 127.0.0.1 --directory srv > /dev/null 2>&1 &)
 sleep 1
 node site-test.js | tee site-test.log
-grep -q "^leaks \[\] errs \[\]" site-test.log && grep -q "^cross habit true meal true ticked 4" site-test.log || { echo "site check failed" >&2; exit 1; }
+grep -q "^leaks \[\] errs \[\]" site-test.log && grep -q "^cross habit true meal true ticked 4" site-test.log && { [ ! -f pc-recordings.json ] || grep -q "^pc booked true ticked 4 mcp [1-9]" site-test.log; } || { echo "site check failed" >&2; exit 1; }
 echo "::endgroup::"
