@@ -39,15 +39,24 @@ body {
 header.top { padding-block: 48px 24px; display: grid; gap: 14px; }
 .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
 h1 { font-family: var(--display); font-weight: 700; font-size: clamp(36px, 6vw, 60px); line-height: 1.02; margin: 0; letter-spacing: -.02em; text-wrap: balance; }
+.lede-list { max-width: 70ch; margin: 0; padding-left: 20px; color: var(--ink-soft); font-size: 17px; display: grid; gap: 6px; }
+.lede-list b { color: var(--ink); }
 .lede { max-width: 62ch; margin: 0; color: var(--ink-soft); font-size: 18px; }
+.tabs { position: sticky; top: 0; z-index: 5; background: var(--bg); display: flex; gap: 6px; overflow-x: auto; padding: 10px 0; border-bottom: 1px solid var(--rule); scrollbar-width: none; }
+.tabs a { flex: none; text-decoration: none; color: var(--ink-soft); border-radius: 999px; padding: 8px 16px; font-weight: 600; display: inline-flex; gap: 8px; align-items: center; border: 1px solid transparent; }
+.tabs a:hover { color: var(--ink); }
+.tabs a[aria-selected="true"] { color: var(--ink); background: var(--panel); border-color: var(--rule); }
+.tabs .dot { width: 10px; height: 10px; border-radius: 50%; }
+/* Hidden tabs stay laid out off screen, so their phones keep running. */
+.panel.off { position: absolute; left: -10000px; top: 0; width: 1080px; visibility: hidden; }
 .jump { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
 .jump a { text-decoration: none; color: var(--ink); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 14px; font-weight: 600; display: inline-flex; gap: 8px; align-items: center; }
 .jump a:hover { border-color: var(--ink-soft); }
 .jump .dot { width: 10px; height: 10px; border-radius: 50%; }
 .note { font-size: 14px; color: var(--ink-soft); }
 
-section.app { border-top: 1px solid var(--rule); padding-block: 48px; display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 56px; align-items: start; }
-.phone-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); display: grid; justify-items: center; gap: 10px; }
+section.app { border-top: 0; padding-block: 40px; display: grid; grid-template-columns: 350px minmax(0, 1fr); gap: 56px; align-items: start; }
+.phone-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 76px); display: grid; justify-items: center; gap: 10px; }
 .story { display: grid; gap: 22px; min-width: 0; }
 .story h2 { font-family: var(--display); font-size: clamp(30px, 4vw, 42px); margin: 0; line-height: 1.05; letter-spacing: -.015em; }
 .story .tag { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
@@ -73,6 +82,7 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
 section.band { border-top: 1px solid var(--rule); padding-block: 48px; display: grid; gap: 22px; }
 section.band h2 { font-family: var(--display); font-size: clamp(30px, 4vw, 42px); margin: 0; line-height: 1.05; letter-spacing: -.015em; }
 section.band > p { margin: 0; max-width: 70ch; }
+#overview > section:first-child { border-top: 0; }
 .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px 32px; }
 .cols h3 { font-family: var(--display); font-weight: 700; font-size: 20px; margin: 0 0 10px; }
 .cols p { margin: 0; }
@@ -110,16 +120,19 @@ details.more[open] summary { margin-bottom: 10px; }
 }
 
 /* ---------- Phone hardware: the real app runs in the iframe, drawn at iPhone size and scaled to fit ---------- */
-.phone { width: 320px; height: 680px; border-radius: 52px; padding: 11px; background: #1B1F1E; box-shadow: 0 0 0 2px #3A403E inset, 0 30px 60px -25px rgba(10,30,20,.45); position: relative; }
+.phone { width: 340px; height: 720px; border-radius: 52px; padding: 11px; background: #1B1F1E; box-shadow: 0 0 0 2px #3A403E inset, 0 30px 60px -25px rgba(10,30,20,.45); position: relative; }
 .screen { position: relative; height: 100%; border-radius: 42px; overflow: hidden; display: flex; flex-direction: column; isolation: isolate; }
 .island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 92px; height: 26px; background: #000; border-radius: 20px; z-index: 3; }
-.status { height: 44px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 6px 28px 0 32px; font: 600 14px/1 -apple-system, var(--body); color: #111; }
+.status { position: absolute; top: 0; left: 0; right: 0; height: 44px; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 6px 28px 0 32px; font: 600 14px/1 -apple-system, var(--body); color: #111; pointer-events: none; }
 .status .sig { font-size: 10px; letter-spacing: 1px; }
-.fit { flex: 1; position: relative; overflow: hidden; margin-bottom: 20px; }
-.screen::after { content: ""; position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; background: #111; opacity: .8; }
+/* The app fills the whole screen, as on an iPhone; demo-env.js reports the status bar and home indicator as safe-area insets. */
+.fit { position: absolute; inset: 0; overflow: hidden; }
+.screen::after { content: ""; z-index: 2; pointer-events: none; position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; background: #111; opacity: .8; }
 .fit iframe { position: absolute; top: 0; left: 0; width: 375px; border: 0; transform-origin: 0 0; background: transparent; }
-.h-screen { background: #FCFDFC; } .c-screen { background: #fff; } .r-screen { background: #fff; } .p-screen { background: #F7F8FA; }
-.status { background: var(--app-top); } .h-screen { --app-top: #F2F4F3; } .c-screen { --app-top: #F6F4EE; } .r-screen { --app-top: #fff; } .p-screen { --app-top: #F7F8FA; }
+.h-screen { background: #0A0E0D; } /* Health runs in its dark appearance */
+.h-screen .status { color: #F2F5F3; } .h-screen::after { background: #F2F5F3; opacity: .7; } .c-screen { background: #fff; } .r-screen { background: #fff; } .p-screen { background: #fff; }
+/* PickleCourts' web build lays out below the status bar itself, ignoring the top inset. */
+.p-screen .fit { top: 44px; }
 .caption { font-size: 13px; color: var(--ink-soft); text-align: center; max-width: 320px; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: #74827C; }
 @media (max-width: 360px) { .phone { width: 100%; } }
@@ -129,24 +142,30 @@ details.more[open] summary { margin-bottom: 10px; }
 <script>
 // Each visit starts fresh: the three phones share one replay position and the
 // apps' saved state, all kept for this origin. Runs before the phones load.
-try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionStorage.removeItem('demo_replay_pc'); } catch (e) {}
+try { localStorage.clear(); sessionStorage.clear(); } catch (e) {}
 </script>
 <div class="wrap">
   <header class="top">
     <div class="eyebrow">Ira Millington · interactive demo</div>
     <h1>iPhone apps built with AI, running live</h1>
-    <p class="lede">Health, Recipes and Claro are Ira's personal apps, built for Ira's own household and friends and installed straight onto their iPhones, not sold in the App Store. Ira builds and runs them with Claude Code and Codex, along with their servers and the home server they run on. Health is used every day by three people. Each phone below runs the real app, the same source code that ships to those iPhones, built for the browser. Only the data is invented, and the first three phones talk to each other the way the real apps do. The fourth is PickleCourts, a public court-booking app in the App Store with more than 200 downloads, which Ira co-develops and where Ira built the tools that let AI assistants search and book.</p>
-    <nav class="jump" aria-label="Sections">
-      <a href="#connect"><span class="dot" style="background: var(--ink-soft)"></span>How they connect</a>
-      <a href="#health"><span class="dot" style="background: var(--health)"></span>Health</a>
-      <a href="#recipes"><span class="dot" style="background: var(--recipes)"></span>Recipes</a>
-      <a href="#claro"><span class="dot" style="background: var(--claro)"></span>Claro</a>
-      <a href="#picklecourts"><span class="dot" style="background: var(--pc)"></span>PickleCourts</a>
-      <a href="#ai"><span class="dot" style="background: var(--ink-soft)"></span>How AI is used</a>
-    </nav>
+    <ul class="lede-list">
+      <li><b>Health, Recipes, Claro:</b> personal apps for a household and friends, installed straight onto their iPhones, not sold in the App Store. Health is used every day by three people.</li>
+      <li><b>PickleCourts:</b> a public court-booking app, co-developed, with 200+ App Store downloads, plus MCP tools that let AI assistants search and book courts.</li>
+      <li><b>Built with Claude Code and Codex:</b> the apps, their servers, and the home server they run on.</li>
+      <li><b>Real code, invented data:</b> each phone runs the same source that ships to the iPhone, built for the browser. The first three talk to each other the way the real apps do.</li>
+    </ul>
+
     <p class="note">Everything here is invented: the people, meals, recipes, photos, workouts and scores. Nothing you do on this page is sent anywhere. The demo is set on Friday, November 6, the day its data was recorded.</p>
   </header>
+  <nav class="tabs" role="tablist" aria-label="Apps">
+    <a role="tab" href="#overview" data-tab="overview"><span class="dot" style="background: var(--ink-soft)"></span>Overview</a>
+    <a role="tab" href="#health" data-tab="health"><span class="dot" style="background: var(--health)"></span>Health</a>
+    <a role="tab" href="#recipes" data-tab="recipes"><span class="dot" style="background: var(--recipes)"></span>Recipes</a>
+    <a role="tab" href="#claro" data-tab="claro"><span class="dot" style="background: var(--claro)"></span>Claro</a>
+    <a role="tab" href="#picklecourts" data-tab="picklecourts"><span class="dot" style="background: var(--pc)"></span>PickleCourts</a>
+  </nav>
 
+<div class="panel" id="overview" role="tabpanel">
   <section class="band" id="connect" aria-labelledby="connect-h">
     <h2 id="connect-h">How the three apps connect</h2>
     <p>Health is the hub. Recipes signs in with your Health account and sends meals to your Health diary; Claro sends the minutes you practice Spanish, which tick off a Health habit. Each app keeps its own data: Recipes has its own server and database, Claro keeps everything on the phone, and only these narrow links cross between them.</p>
@@ -203,7 +222,31 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
   </section>
 
-  <section class="app" id="health" aria-labelledby="health-h">
+  <section class="band" id="ai" aria-labelledby="ai-h">
+    <h2 id="ai-h">How AI is used, in building and in the apps</h2>
+    <div class="cols">
+      <div>
+        <h3>Built with coding agents</h3>
+        <p>The apps, their servers, the home server and this page are written with Claude Code and Codex. Each repository has an AGENTS.md runbook the agents work from (how to test, deploy and roll back, and what never to touch), and tests decide whether a change ships: about 940 server tests for Health, plus tests for Recipes and Claro. This page rebuilds itself when an app changes, and refuses to publish if a scripted step fails, a server errors or a real name turns up in the recording.</p>
+      </div>
+      <div>
+        <h3>Models picked by testing them</h3>
+        <p>Health's photo model was chosen by scoring candidates on 20 Nutrition5k plates with known calories, and by rerunning one photo to check the answer holds still. Claro's translator was chosen from ten models given the same beginner answers. The details are under each app. Models are server settings, so they change without an app update.</p>
+      </div>
+      <div>
+        <h3>Guardrails around every call</h3>
+        <p>Replies must match a JSON schema, and requests only go to providers that enforce it. A failure falls back to a second model, then reports an error instead of guessing. Photos are never stored, and the translator can't change a score. Where a rule does better than a model (review timing, writing slips, unit conversion), there is no model.</p>
+      </div>
+      <div>
+        <h3>Tools for AI agents: PickleCourts</h3>
+        <p>On <a href="https://picklecourts.rent">PickleCourts</a> (co-developed): MCP booking tools, account linking and a plugin with a booking skill, so assistants can find and book courts safely. The <a href="#picklecourts">PickleCourts tab</a> shows the tools and their real answers on demo data.</p>
+      </div>
+    </div>
+    <p class="note"><b>Not built yet:</b> a dedicated evaluation suite for these AI features. The model choices rest on the one-off tests above, and the plugin's reviewer test prompts (five that should trigger tools, three that shouldn't) are the start of one for booking.</p>
+  </section>
+</div>
+
+  <section class="app panel" role="tabpanel" id="health" aria-labelledby="health-h">
     <div class="phone-col">
       <div class="phone" role="region" aria-label="Health app, running live">
         <div class="screen h-screen">
@@ -278,7 +321,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
   </section>
 
-  <section class="app" id="recipes" aria-labelledby="recipes-h">
+  <section class="app panel" role="tabpanel" id="recipes" aria-labelledby="recipes-h">
     <div class="phone-col">
       <div class="phone" role="region" aria-label="Recipes app, running live">
         <div class="screen r-screen">
@@ -306,12 +349,6 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
         </ul>
       </div>
       <div>
-        <h3>No AI, on purpose</h3>
-        <ul class="unique">
-          <li>Matching an ingredient is a search plus a unit conversion: a weight, or a cup or clove through the food's own portions. Anything it can't turn into grams (“salt, to taste”) is left for you to match instead of being guessed.</li>
-        </ul>
-      </div>
-      <div>
         <h3>Try this</h3>
         <ol class="try" id="r-try">
           <li data-on="recipes:read:/recipes/api/recipes/:id"><span class="box" aria-hidden="true">✓</span><span class="t">On <b>Feed</b>, open Jordan's Instant Pot Quesabirria, shared with everyone.</span></li>
@@ -323,7 +360,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
   </section>
 
-  <section class="app" id="claro" aria-labelledby="claro-h">
+  <section class="app panel" role="tabpanel" id="claro" aria-labelledby="claro-h">
     <div class="phone-col">
       <div class="phone" role="region" aria-label="Claro app, running live">
         <div class="screen c-screen">
@@ -341,6 +378,15 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
         <h2 id="claro-h">Everyday Mexican Spanish for a returning beginner</h2>
       </div>
       <p>Claro is a Spanish course built around real situations in Mexico: ordering at a fonda, calling the plumber, texting a friend. Units run from A1 to B2, with spaced reviews, graded readings, conversations and a hands-free “Just listen” mode for work. There is no account: progress lives on the phone. The one thing it sends is practice minutes, to a Health habit you link it to.</p>
+      <div>
+        <h3>Why build it instead of using an existing app</h3>
+        <ul class="unique">
+          <li><b>Mexican Spanish, for real situations.</b> General courses teach a neutral Spanish through set lessons. Claro teaches what is said in Mexico, in the places it is actually needed: the fonda, the plumber, a coworker, a text to a friend.</li>
+          <li><b>Built for a returning beginner.</b> A placement check skips what is already known, and the units are about being understood, not about streaks, hearts or a daily quota.</li>
+          <li><b>It fits a workday.</b> A hands-free listening mode for when speaking isn't possible, and a switch that turns every speaking prompt into writing.</li>
+          <li><b>It connects to the rest.</b> Practice minutes tick off a habit in Health, and nothing is sent anywhere else: no account, no ads.</li>
+        </ul>
+      </div>
       <div>
         <h3>What makes it different</h3>
         <ul class="unique">
@@ -373,7 +419,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
   </section>
 
-  <section class="app" id="picklecourts" aria-labelledby="pc-h">
+  <section class="app panel" role="tabpanel" id="picklecourts" aria-labelledby="pc-h">
     <div class="phone-col">
       <div class="phone" role="region" aria-label="PickleCourts app, running live">
         <div class="screen p-screen">
@@ -382,7 +428,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
           <div class="fit"><div class="loading">Starting PickleCourts…</div><iframe id="p-frame" title="PickleCourts app" src="picklecourts/"></iframe></div>
         </div>
       </div>
-      <div class="caption">Three invented Oklahoma City clubs, recorded on Friday, November 6. Payment runs in the server's mock mode: nothing is charged. The map is off, since it needs a Google key.</div>
+      <div class="caption">Three invented Oklahoma City clubs, recorded on Friday, November 6. Payment runs in the server's mock mode: nothing is charged.</div>
       <button class="reset" type="button" data-reset>Start the demo over</button>
     </div>
     <div class="story">
@@ -390,11 +436,11 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
         <div class="tag">PickleCourts · public, co-developed · Expo / React Native · iPhone and web</div>
         <h2 id="pc-h">Book a pickleball court, from the app or from an AI assistant</h2>
       </div>
-      <p><a href="https://picklecourts.rent">PickleCourts</a> is a public court-booking marketplace that Ira co-develops with one other developer, with more than 200 downloads in the App Store. It shows open times across clubs that run different booking systems and books them in one checkout. This phone runs its consumer app against its real Node server and Postgres on a throwaway database. The clubs, prices and booking below are invented.</p>
+      <p><a href="https://picklecourts.rent">PickleCourts</a> is a public, co-developed court-booking marketplace with more than 200 downloads in the App Store. It shows open times across clubs that run different booking systems and books them in one checkout. This phone runs its consumer app against its real Node server and Postgres on a throwaway database. The clubs, prices and booking below are invented.</p>
       <div>
-        <h3>Ira's part: tools for AI agents</h3>
+        <h3>Tools for AI agents</h3>
         <ul class="unique">
-          <li><b>An MCP server assistants can call.</b> The other co-developer built the first read-only version. Ira added venue search, account linking (OAuth with PKCE, rotating refresh tokens) and the booking tools on top of the same server, so Claude, ChatGPT or any MCP client can find a court and book it.</li>
+          <li><b>An MCP server assistants can call.</b> Venue search, account linking (OAuth with PKCE, rotating refresh tokens) and booking tools, so Claude, ChatGPT or any MCP client can find a court and book it.</li>
           <li><b>Booking that can't go wrong twice.</b> An assistant first gets a priced quote, and booking needs that quote's single-use confirmation token. It can't book twice, or book something you didn't confirm, and the tokens are revoked when you reset your password.</li>
           <li><b>A plugin with a booking skill.</b> A packaged plugin for ChatGPT and Claude carries a short skill that tells the assistant the steps: pin down place and date, search, offer two or three concrete times with prices, and never say a court is booked until checkout is finished.</li>
           <li><b>Where it is.</b> Search has been listed in Claude's connector directory since Oct 12, at <code>https://api.picklecourts.rent/mcp</code>. The ChatGPT plugin with booking is in OpenAI's review. Booking stays off in the Claude directory until payments are approved there.</li>
@@ -421,37 +467,45 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
   </section>
 
-  <section class="band" id="ai" aria-labelledby="ai-h">
-    <h2 id="ai-h">How AI is used, in building and in the apps</h2>
-    <div class="cols">
-      <div>
-        <h3>Built with coding agents</h3>
-        <p>The apps, their servers, the home server and this page are written with Claude Code and Codex. Each repository has an AGENTS.md runbook the agents work from (how to test, deploy and roll back, and what never to touch), and tests decide whether a change ships: about 940 server tests for Health, plus tests for Recipes and Claro. This page rebuilds itself when an app changes, and refuses to publish if a scripted step fails, a server errors or a real name turns up in the recording.</p>
-      </div>
-      <div>
-        <h3>Models picked by testing them</h3>
-        <p>Health's photo model was chosen by scoring candidates on 20 Nutrition5k plates with known calories, and by rerunning one photo to check the answer holds still. Claro's translator was chosen from ten models given the same beginner answers. The details are under each app. Models are server settings, so they change without an app update.</p>
-      </div>
-      <div>
-        <h3>Guardrails around every call</h3>
-        <p>Replies must match a JSON schema, and requests only go to providers that enforce it. A failure falls back to a second model, then reports an error instead of guessing. Photos are never stored, and the translator can't change a score. Where a rule does better than a model (review timing, writing slips, unit conversion), there is no model.</p>
-      </div>
-      <div>
-        <h3>Tools for AI agents: PickleCourts</h3>
-        <p>On <a href="https://picklecourts.rent">PickleCourts</a>, which Ira co-develops, Ira built the MCP booking tools, account linking and a plugin with a booking skill, so assistants can find and book courts safely. The <a href="#picklecourts">PickleCourts phone</a> shows the tools and their real answers on demo data.</p>
-      </div>
-    </div>
-    <p class="note"><b>Not built yet:</b> a dedicated evaluation suite for these AI features. The model choices rest on the one-off tests above, and the plugin's reviewer test prompts (five that should trigger tools, three that shouldn't) are the start of one for booking.</p>
-  </section>
+
 
   <footer>
     <p><b>What is real.</b> All four phones run the apps' own source code, unmodified, exported for the web with Expo. Claro keeps its state on the device, so it runs here as on the phone (the optional answer translator, which needs the home server, is off); its demo learner was built by Claro's own scheduling and course code.</p>
     <p><b>What is stood in.</b> Health and Recipes talk to servers at home. For this page, those real servers ran against throwaway databases of invented people while a script tapped through these same builds, and the phones replay the recorded answers. The three phones share one recording, so a change in one shows up in the others. Your taps move the replay along, and settings you change are kept on the page; a change the script never made shows the closest recorded result instead. Reloading the page starts everything over. PickleCourts was recorded the same way against its own server, with payment in the server's mock mode, and keeps a separate replay; its other venues in the development data are real clubs, so they were hidden and three invented clubs added. The AI photo estimates are canned answers that the server then processed for real. The browser has no camera roll, notifications or speech recognition, so those use small stand-ins.</p>
     <p><b>Camera roll photos</b> are real meals from Wikimedia Commons, cropped and resized; the AI answers about them are pre-written. <a href="https://commons.wikimedia.org/wiki/File:Tacos_de_Barba_Birria_6.jpg">Tacos</a> by City Foodsters (<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Oatmeal,_blueberries_and_almond_milk.jpg">Oatmeal</a> by Ann Larie Valentine (<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Caffe_Latte_cup.jpg">Latte</a> by Maksym Kozlenko (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Tomato_sauce_spaghetti,_at_Restaurant_Gusto_(2013.07.13)_2.jpg">Spaghetti</a> by Lombroso (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Salad_bowl_at_Bröd_&_Salt.jpg">Salad</a> by JIP (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Smashed_Avocado_On_Toast_(with_one_poached_egg)_-_Jonny's_2026-01-06.jpg">Avocado toast</a> by Andy Li (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>).</p>
-    <p>The Instant Pot recipes are Ira's own. Left out on purpose: tools without a phone screen (the Gmail organizer, the Spotify playlist jobs) and apps built for work.</p>
+    <p>The Instant Pot recipes are real, home-tested recipes. Left out on purpose: tools without a phone screen (the Gmail organizer, the Spotify playlist jobs) and apps built for work.</p>
   </footer>
 </div>
 
+<script>
+// Tabs: one panel at a time; hidden panels stay laid out off screen so every
+// phone keeps running and the cross-app replay still works. #connect and #ai
+// open the overview.
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabs [data-tab]'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+  function show(id, scroll) {
+    if (!document.getElementById(id) || !document.getElementById(id).classList.contains('panel')) id = 'overview';
+    panels.forEach(function (p) { p.classList.toggle('off', p.id !== id); });
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.tab === id)); });
+    window.dispatchEvent(new Event('resize'));
+    if (scroll) { var nav = document.querySelector('.tabs'); if (window.scrollY > nav.offsetTop) window.scrollTo(0, nav.offsetTop); }
+  }
+  function fromHash(scroll) { var h = (location.hash || '#overview').slice(1); show(h === 'connect' || h === 'ai' ? 'overview' : h, scroll); }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (!el || !(el.classList.contains('panel') || id === 'connect' || id === 'ai')) return;
+    e.preventDefault();
+    history.replaceState(null, '', '#' + id);
+    fromHash(true);
+  });
+  window.addEventListener('hashchange', function () { fromHash(true); });
+  fromHash(false);
+})();
+</script>
 <script>
 // Scales each app (drawn at iPhone width) into its phone frame, ticks off the
 // "Try this" lists from what the replays report, and restarts the demo.
@@ -507,7 +561,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
   // Starting over restarts every phone together.
   document.querySelectorAll('[data-reset]').forEach(function (b) {
     b.addEventListener('click', function () {
-      try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionStorage.removeItem('demo_replay_pc'); } catch (e) {}
+      try { localStorage.clear(); sessionStorage.clear(); } catch (e) {}
       items.forEach(function (li) { li.classList.remove('done'); });
       claroSent = false;
       show();

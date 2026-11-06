@@ -20,6 +20,33 @@
   DemoDate.UTC = RealDate.UTC;
   window.Date = DemoDate;
 
+  // The phone frame draws an iPhone's status bar and home indicator over the
+  // app, so report the insets an iPhone would (react-native-safe-area-context
+  // reads them from env(safe-area-inset-*) through getComputedStyle, which is
+  // zero in a desktop browser). Tab bars then clear the home indicator and
+  // headers clear the status bar, as on the phone.
+  var INSETS = { Top: 47, Bottom: 28, Left: 0, Right: 0 };
+  var realGCS = window.getComputedStyle.bind(window);
+  window.getComputedStyle = function (el, pseudo) {
+    var cs = realGCS(el, pseudo);
+    var inline = el && el.style && el.style.paddingTop;
+    if (!inline || inline.indexOf('safe-area-inset') < 0) return cs;
+    return new Proxy(cs, { get: function (t, k) {
+      var m = /^padding(Top|Bottom|Left|Right)$/.exec(String(k));
+      if (m) return INSETS[m[1]] + 'px';
+      var v = t[k]; return typeof v === 'function' ? v.bind(t) : v;
+    } });
+  };
+
+  // react-native-web gives a one-line tab label overflow:hidden inside a tab
+  // a few pixels shorter than its line height, which clips letters like g and
+  // y in a desktop browser. Let the label overflow, as the phone draws it.
+  try {
+    var tabCss = document.createElement('style');
+    tabCss.textContent = '[role="tab"] [dir="auto"] { overflow: visible !important; }';
+    document.head.appendChild(tabCss);
+  } catch (e) {}
+
   try {
     var seed = window.__DEMO_STORAGE || {};
     Object.keys(seed).forEach(function (k) { if (localStorage.getItem(k) == null) localStorage.setItem(k, seed[k]); });

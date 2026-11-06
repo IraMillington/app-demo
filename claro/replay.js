@@ -72,6 +72,25 @@
     });
     return { status: e.status, body: JSON.stringify(list) };
   }
+  // Habits the viewer ticks are kept too and laid over every habits read, so a
+  // tick stays ticked even when the tour never recorded that habit's toggle.
+  function habitTicks() { try { return JSON.parse(sessionStorage.getItem(KEY + '_habits') || '{}'); } catch (e) { return {}; } }
+  function saveTick(body) {
+    try {
+      var b = JSON.parse(body || '{}'), t = habitTicks();
+      if (b.habit_id && b.date) { t[b.date + '|' + b.habit_id] = !!b.completed; sessionStorage.setItem(KEY + '_habits', JSON.stringify(t)); }
+    } catch (e) {}
+  }
+  function withTicks(e, path) {
+    var m = /^\/api\/habits\/(\d{4}-\d{2}-\d{2})$/.exec(pathOnly(path));
+    var t = habitTicks();
+    if (!m || !Object.keys(t).length) return e;
+    try {
+      var j = JSON.parse(e.body);
+      (j.habits || []).forEach(function (h) { var k = m[1] + '|' + h.id; if (k in t) h.completed = t[k]; });
+      return { status: e.status, body: JSON.stringify(j) };
+    } catch (x) { return e; }
+  }
   function picked() { return (window.__demoPicked || []).slice(-4); }
   function estimateKey(ids) {
     var n = {};
@@ -106,13 +125,14 @@
         i = pickRead(method, path);
         tell({ kind: 'read', path: path });
         if (i === null) return new Response(JSON.stringify({ detail: 'Not part of this demo' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-        return respond(withPrefs(rec[i]));
+        return respond(withTicks(withPrefs(rec[i]), path));
       }
       if (pathOnly(path) === '/api/profile/preferences') {
         savePrefs(body);
         tell({ kind: 'write', method: method, path: pathOnly(path), body: body });
         return new Response(JSON.stringify(prefs), { status: 200, headers: { 'Content-Type': 'application/json' } });
       }
+      if (pathOnly(path) === '/api/habits/toggle') saveTick(body);
       i = pickWrite(method, path, body);
       tell({ kind: 'write', method: method, path: pathOnly(path).replace(ID, ':id'), body: body });
       if (i === null) {
