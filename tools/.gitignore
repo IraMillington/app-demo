@@ -12,3 +12,7 @@ stack/*.pid
 stack/next_estimate.json
 *.png
 node_modules/
+recipes/
+stack/venv-recipes/
+stack/storage-recipes/
+stack/links.json

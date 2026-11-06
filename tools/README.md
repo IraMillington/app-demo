@@ -1,15 +1,16 @@
 # Phone app demo site
 
-A static page that runs Ira's two iPhone apps, **Health** (`health-app` repo) and
-**Claro** (`claro-spanish` repo), inside phone frames on invented data, with notes on
-what makes each app different and a "Try this" list.
+A static page that runs Ira's three iPhone apps, **Health** (`health-app` repo),
+**Recipes** (`recipes-app`) and **Claro** (`claro-spanish`), inside phone frames on
+invented data, with notes on what makes each app different, how they connect, how AI is
+used, and "Try this" lists. It is written for people hiring for AI engineering roles.
 
 - **Public site:** https://iramillington.github.io/app-demo/ (GitHub Pages from the top of
   this repo's `main`; `tools/` holds what builds it, `build.json` says which app commits it shows).
 - **Automatic rebuilding:** `.github/workflows/rebuild.yml` every three hours
-  checks whether health-app (`master`) or claro-spanish (`main`) moved, and if so runs
+  checks whether health-app (`master`), claro-spanish or recipes-app (`main`) moved, and if so runs
   `ci/build.sh` and `ci/publish.sh`, which commits the new site to `main`. A push to `tools/`
-  or a manual run always rebuilds. One secret, `DEMO_TOKEN` (read access to the two app
+  or a manual run always rebuilds. One secret, `DEMO_TOKEN` (read access to the three app
   repos), is needed; the foods the seed logs come from `stack/food_cache_rows.json`
   (public USDA data), so no USDA key is needed.
   A failed tour step, a server error or a real name in the recording fails the build
@@ -19,7 +20,7 @@ what makes each app different and a "Try this" list.
 
 ## What is real and what is stood in
 
-- Both phones run the apps' **own source, unmodified**, exported for the web with
+- All three phones run the apps' **own source, unmodified**, exported for the web with
   `npx expo export --platform web`. The only build-time change is `health-web/metro.config.js`,
   which swaps two phone-only modules for web stand-ins in `health-web/demo-stubs/`:
   `expo-notifications` (no-ops) and `expo-image-picker` (a demo camera roll of the eight
@@ -32,7 +33,22 @@ what makes each app different and a "Try this" list.
   (`claro-seed.json`) is made by Claro's own functions: `claro-web/demo-seed.ts` runs
   reviews through its FSRS `rate()`, walks ten course units through every stage, and
   records slips; `check-seed.ts` validates it with the app's `parseBackup`.
-- **Health** talks to the home server, so the page **replays** real server answers.
+- **Recipes** has its own server and Postgres (`stack/run-recipes.sh`, port 8092; the site
+  reaches it as `https://health.tailc51c3c.ts.net/recipes`, like Funnel). `stack/seed_recipes.py`
+  signs the demo people in with the one Health login, makes Sam friends with Jordan and
+  Priya (Alex's request is left pending), and adds recipes (three of Ira's Instant Pot
+  recipes and one invented) with every ingredient already matched to a USDA food. Matches
+  are kept in `stack/recipe_foods.json`, so no USDA key is needed to rebuild. The same
+  script gives Sam a "Spanish practice" habit filled in by Claro and its link code.
+- **How they connect** is recorded too: the tour has Claro send today's minutes (which
+  tick the habit), then Recipes "Save as a meal" and Health logging it. `demo-links.js`
+  holds the two apps' saved state (signed in, linked).
+- **Health** talks to the home server, so the page **replays** real server answers. All
+  three phones load `replay.js` and share one `recordings.json` at the site root and one
+  replay position in `sessionStorage`, so a change in one phone shows in the others. The
+  page clears that state on load, so a reload starts over. Claro's sends are recorded
+  first among the cross-app changes because the real Claro sends by itself shortly after
+  opening.
   `replay.js` answers the app's fetches from `recordings.json`; each change the viewer
   makes moves the replay to the server's state right after that change was recorded.
   Settings changes (conditions, features) are kept on the page and laid over the profile.

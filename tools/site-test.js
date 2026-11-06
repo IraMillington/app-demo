@@ -10,10 +10,26 @@ const { chromium } = require('playwright');
   p.on('console', (m) => { if (m.type() === 'error') errs.push(m.text().slice(0, 200)); });
   await p.goto('http://127.0.0.1:8420/site/index.html');
   await p.waitForTimeout(6000);
-  const h = p.frameLocator('#h-frame');
+  const h = p.frameLocator('#h-frame'), r = p.frameLocator('#r-frame'), c = p.frameLocator('#c-frame');
+  // Across phones, in the order the page suggests: Claro sends its minutes by
+  // itself, Health's habit shows them; Recipes saves a meal, Health logs it.
+  await p.locator('#claro').scrollIntoViewIfNeeded();
+  await p.waitForTimeout(20000);
   await p.locator('#health').scrollIntoViewIfNeeded();
-  await p.screenshot({ path: 's-1.png' });
+  await h.locator('[role=tab][aria-label="Check-in"]').click(); await p.waitForTimeout(2000);
+  const habit = await h.getByText(/13 of 10 min in Claro/).count();
+  await p.locator('#recipes').scrollIntoViewIfNeeded();
+  await r.getByText('Cookbook', { exact: true }).last().click(); await p.waitForTimeout(1500);
+  await r.getByText('Instant Pot Chicken Tikka Masala').first().click(); await p.waitForTimeout(3000);
+  await r.getByText('Save as a meal', { exact: true }).last().click(); await p.waitForTimeout(2000);
+  await p.screenshot({ path: 's-r.png' });
+  await p.locator('#health').scrollIntoViewIfNeeded();
   await h.locator('[role=tab][aria-label="Food"]').click(); await p.waitForTimeout(1500);
+  await h.locator('[aria-label^="Add food to Dinner"]').last().click(); await p.waitForTimeout(2500);
+  await h.getByText('Instant Pot Chicken Tikka Masala').first().click(); await p.waitForTimeout(2500);
+  const logged = await h.getByText('Saved meal · 23 foods').count();
+  console.log('cross habit', habit > 0, 'meal', logged > 0, 'ticked', await p.locator('#x-try li.done').count());
+  await p.screenshot({ path: 's-1.png' });
   await h.locator('[aria-label="AI estimate from a photo for Dinner"]').click(); await p.waitForTimeout(1200);
   await h.getByText('Photo library', { exact: true }).last().click(); await p.waitForTimeout(600);
   await h.locator('[data-demo-photo="tacos"]').click(); await h.locator('[data-demo-photo="tacosSide"]').click();

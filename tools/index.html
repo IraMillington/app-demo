@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Health and Claro</title>
+<title>Ira's Apps, Live</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -13,6 +13,7 @@
   --panel: #F8FAF8;
   --health: #174B3B;
   --claro: #D9533F;
+  --recipes: #9C3F1E;
   --done: #28745B;
   --display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
   --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -21,12 +22,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #111916; --ink: #E6EEE9; --ink-soft: #9DB0A6; --rule: #2A3732; --panel: #17221E;
-    --health: #8CCBB2; --claro: #FF9A86; --done: #8CCBB2; color-scheme: dark;
+    --health: #8CCBB2; --claro: #FF9A86; --recipes: #DE8761; --done: #8CCBB2; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #111916; --ink: #E6EEE9; --ink-soft: #9DB0A6; --rule: #2A3732; --panel: #17221E;
-  --health: #8CCBB2; --claro: #FF9A86; --done: #8CCBB2; color-scheme: dark;
+  --health: #8CCBB2; --claro: #FF9A86; --recipes: #DE8761; --done: #8CCBB2; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body {
@@ -49,7 +50,7 @@ section.app { border-top: 1px solid var(--rule); padding-block: 48px; display: g
 .story { display: grid; gap: 22px; min-width: 0; }
 .story h2 { font-family: var(--display); font-size: clamp(30px, 4vw, 42px); margin: 0; line-height: 1.05; letter-spacing: -.015em; }
 .story .tag { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
-#health .tag { color: var(--health); } #claro .tag { color: var(--claro); }
+#health .tag { color: var(--health); } #claro .tag { color: var(--claro); } #recipes .tag { color: var(--recipes); }
 .story p { margin: 0; max-width: 62ch; }
 .story h3 { font-family: var(--display); font-weight: 700; font-size: 20px; margin: 0 0 10px; }
 .unique { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
@@ -68,6 +69,22 @@ section.app { border-top: 1px solid var(--rule); padding-block: 48px; display: g
 footer { border-top: 1px solid var(--rule); padding-block: 28px 56px; color: var(--ink-soft); font-size: 14px; }
 footer p { max-width: 70ch; margin: 0 0 8px; }
 
+section.band { border-top: 1px solid var(--rule); padding-block: 48px; display: grid; gap: 22px; }
+section.band h2 { font-family: var(--display); font-size: clamp(30px, 4vw, 42px); margin: 0; line-height: 1.05; letter-spacing: -.015em; }
+section.band > p { margin: 0; max-width: 70ch; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px 32px; }
+.cols h3 { font-family: var(--display); font-weight: 700; font-size: 20px; margin: 0 0 10px; }
+.cols p { margin: 0; }
+.flow-wrap { overflow-x: auto; }
+.flow { width: 100%; min-width: 620px; max-width: 860px; height: auto; color: var(--ink); display: block; }
+.flow .box { fill: var(--panel); stroke: var(--rule); stroke-width: 1.5; }
+.flow .name { font: 700 17px var(--display); fill: currentColor; }
+.flow .sub { font: 500 12.5px var(--body); fill: var(--ink-soft); }
+.flow .lab { font: 600 12px var(--body); fill: currentColor; }
+.flow .line { stroke: var(--ink-soft); stroke-width: 1.5; fill: none; }
+.flow .dash { stroke-dasharray: 4 4; }
+.flow .head { fill: var(--ink-soft); }
+a { color: inherit; text-underline-offset: 2px; }
 @media (max-width: 860px) {
   section.app { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .phone-col { position: static; }
@@ -82,25 +99,89 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
 .fit { flex: 1; position: relative; overflow: hidden; margin-bottom: 20px; }
 .screen::after { content: ""; position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; background: #111; opacity: .8; }
 .fit iframe { position: absolute; top: 0; left: 0; width: 375px; border: 0; transform-origin: 0 0; background: transparent; }
-.h-screen { background: #FCFDFC; } .c-screen { background: #fff; }
-.status { background: var(--app-top); } .h-screen { --app-top: #F2F4F3; } .c-screen { --app-top: #F6F4EE; }
+.h-screen { background: #FCFDFC; } .c-screen { background: #fff; } .r-screen { background: #fff; }
+.status { background: var(--app-top); } .h-screen { --app-top: #F2F4F3; } .c-screen { --app-top: #F6F4EE; } .r-screen { --app-top: #fff; }
 .caption { font-size: 13px; color: var(--ink-soft); text-align: center; max-width: 320px; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: #74827C; }
 @media (max-width: 360px) { .phone { width: 100%; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
+<script>
+// Each visit starts fresh: the three phones share one replay position and the
+// apps' saved state, all kept for this origin. Runs before the phones load.
+try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e) {}
+</script>
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">Ira's iPhone apps · interactive demo</div>
-    <h1>Health and Claro, running on demo data</h1>
-    <p class="lede">Each phone below runs the real app: the same source code that ships to Ira's iPhone, built for the browser. Only the data is invented. Tap around, estimate a meal from the demo camera roll, or review a Spanish phrase.</p>
-    <nav class="jump" aria-label="Apps">
+    <div class="eyebrow">Ira Millington · interactive demo</div>
+    <h1>Three iPhone apps, built with AI, running live</h1>
+    <p class="lede">Ira builds and runs these apps with Claude Code and Codex: three iPhone apps, their servers, and the home server they run on. Each phone below runs the real app, the same source code that ships to Ira's iPhone, built for the browser. Only the data is invented, and the three phones talk to each other the way the real apps do.</p>
+    <nav class="jump" aria-label="Sections">
+      <a href="#connect"><span class="dot" style="background: var(--ink-soft)"></span>How they connect</a>
       <a href="#health"><span class="dot" style="background: var(--health)"></span>Health</a>
+      <a href="#recipes"><span class="dot" style="background: var(--recipes)"></span>Recipes</a>
       <a href="#claro"><span class="dot" style="background: var(--claro)"></span>Claro</a>
+      <a href="#ai"><span class="dot" style="background: var(--ink-soft)"></span>How AI is used</a>
     </nav>
-    <p class="note">Everything here is invented: the people, meals, photos, workouts and scores. Nothing you do on this page is sent anywhere. The demo is set on {{DEMO_DAY}}, the day its data was recorded.</p>
+    <p class="note">Everything here is invented: the people, meals, recipes, photos, workouts and scores. Nothing you do on this page is sent anywhere. The demo is set on {{DEMO_DAY}}, the day its data was recorded.</p>
   </header>
+
+  <section class="band" id="connect" aria-labelledby="connect-h">
+    <h2 id="connect-h">How the three apps connect</h2>
+    <p>Health is the hub. Recipes signs in with your Health account and sends meals to your Health diary; Claro sends the minutes you practice Spanish, which tick off a Health habit. Each app keeps its own data: Recipes has its own server and database, Claro keeps everything on the phone, and only these narrow links cross between them.</p>
+    <div class="flow-wrap"><svg class="flow" viewBox="0 0 860 300" role="img" aria-labelledby="flow-t flow-d">
+      <title id="flow-t">How Recipes, Health and Claro connect</title>
+      <desc id="flow-d">Recipes signs in through Health, looks up foods in Health and sends it saved meals. Claro sends practice minutes to Health and has Health's server translate answers. The Health and Recipes servers run on the home server behind Tailscale Funnel.</desc>
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="head" d="M0 0L10 5L0 10z"/></marker></defs>
+      <rect class="box" x="10" y="20" width="220" height="100" rx="14"/>
+      <text class="name" x="30" y="52" style="fill: var(--recipes)">Recipes</text>
+      <text class="sub" x="30" y="76">Friends, shared recipes, scaling</text>
+      <text class="sub" x="30" y="96">Own server and Postgres</text>
+      <rect class="box" x="320" y="20" width="220" height="100" rx="14"/>
+      <text class="name" x="340" y="52" style="fill: var(--health)">Health</text>
+      <text class="sub" x="340" y="76">Food diary, habits, training</text>
+      <text class="sub" x="340" y="96">Server, Postgres, AI calls</text>
+      <rect class="box" x="630" y="20" width="220" height="100" rx="14"/>
+      <text class="name" x="650" y="52" style="fill: var(--claro)">Claro</text>
+      <text class="sub" x="650" y="76">Spanish course and reviews</text>
+      <text class="sub" x="650" y="96">No account; data on the phone</text>
+      <path class="line" d="M232 46H318" marker-end="url(#ah)"/>
+      <text class="lab" x="242" y="39">one login</text>
+      <path class="line" d="M232 74H318" marker-end="url(#ah)" marker-start="url(#ah)"/>
+      <text class="lab" x="242" y="67">food lookups</text>
+      <path class="line" d="M232 102H318" marker-end="url(#ah)"/>
+      <text class="lab" x="242" y="95">saved meals</text>
+      <path class="line" d="M628 56H542" marker-end="url(#ah)"/>
+      <text class="lab" x="546" y="49">practice minutes</text>
+      <path class="line dash" d="M628 92H542" marker-end="url(#ah)" marker-start="url(#ah)"/>
+      <text class="lab" x="552" y="85">translations</text>
+      <rect class="box" x="120" y="196" width="620" height="84" rx="14"/>
+      <text class="name" x="140" y="226">Home server</text>
+      <text class="sub" x="140" y="248">Proxmox mini PC · Docker VM · Tailscale Funnel publishes only the app APIs</text>
+      <text class="sub" x="140" y="268">Health and Recipes servers, each with its own Postgres · nightly offsite backups</text>
+      <path class="line dash" d="M120 122V194"/><path class="line dash" d="M430 122V194"/>
+    </svg></div>
+    <div class="cols">
+      <div>
+        <h3>Recipes → Health</h3>
+        <p>A Health account signs straight into Recipes: the Recipes server checks the password with Health and gets a link code back, so the diary is connected without a trip to Settings. Ingredients are matched to Health's own food database, recipes show nutrition per serving, and <b>Save as a meal</b> puts one serving into Health's saved meals, one tap from the diary. The Recipes server never stores the code or any nutrition data.</p>
+      </div>
+      <div>
+        <h3>Claro → Health</h3>
+        <p>Claro counts the minutes you actually practice (not minutes the app sat open) and sends them with a link code made from the habit in Health. A day that reaches the goal ticks the habit. Claro never holds Health's API key, and the code does only that one thing. Claro's optional answer translator also runs on the Health server, so the AI key stays off the phone.</p>
+      </div>
+      <div>
+        <h3>Try it across phones</h3>
+        <ol class="try" id="x-try">
+          <li data-on="claro:write:/api/practice/minutes"><span class="box" aria-hidden="true">✓</span><span class="t"><b>Claro</b> sends Sam's 13 minutes today on its own a few seconds after the page opens (or tap its gear, then <b>Send now</b>).</span></li>
+          <li data-on="health:read:habits-after-claro"><span class="box" aria-hidden="true">✓</span><span class="t">In <b>Health</b>, open <b>Check-in</b>: “Spanish practice” is done, 13 of 10 minutes in Claro.</span></li>
+          <li data-on="recipes:write:/api/recipes/app/saved-meal"><span class="box" aria-hidden="true">✓</span><span class="t">In <b>Recipes</b>, open <b>Cookbook</b>, then Chicken Tikka Masala, scroll to Nutrition and tap <b>Save as a meal</b>.</span></li>
+          <li data-on="health:write:meal-log"><span class="box" aria-hidden="true">✓</span><span class="t">In <b>Health</b>, on Food, tap <b>Add food</b> under Dinner and tap the Tikka Masala at the top. Its ingredients land in the diary, grouped under the recipe.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
 
   <section class="app" id="health" aria-labelledby="health-h">
     <div class="phone-col">
@@ -112,7 +193,7 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
         </div>
       </div>
       <div class="caption">Signed in as “Sam”: Apple Watch connected, no health conditions set.</div>
-      <button class="reset" type="button" data-reset="health">Start Health over</button>
+      <button class="reset" type="button" data-reset>Start the demo over</button>
     </div>
     <div class="story">
       <div>
@@ -159,6 +240,51 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
     </div>
   </section>
 
+  <section class="app" id="recipes" aria-labelledby="recipes-h">
+    <div class="phone-col">
+      <div class="phone" role="region" aria-label="Recipes app, running live">
+        <div class="screen r-screen">
+          <div class="island"></div>
+          <div class="status"><span>11:30</span><span class="sig" aria-hidden="true">●●●● ▮</span></div>
+          <div class="fit"><div class="loading">Starting Recipes…</div><iframe id="r-frame" title="Recipes app" src="recipes/index.html"></iframe></div>
+        </div>
+      </div>
+      <div class="caption">Sam, signed in with the same login as Health. Friends with Jordan and Priya.</div>
+      <button class="reset" type="button" data-reset>Start the demo over</button>
+    </div>
+    <div class="story">
+      <div>
+        <div class="tag">Recipes · Expo / React Native · iPhone</div>
+        <h2 id="recipes-h">A cookbook shared with friends, linked to the food diary</h2>
+      </div>
+      <p>Recipes is a social cookbook: everyone has a profile, adds friends and shares recipes with them, then saves or copies what friends share. It has its own FastAPI server and Postgres database beside Health's on the home server, with the same build, update and deploy setup.</p>
+      <div>
+        <h3>What makes it different</h3>
+        <ul class="unique">
+          <li><b>Scale by what you have.</b> “How much chicken do you have?” Type 1 lb instead of 1.5 and every amount follows, including the ones written inside the steps. US and metric measures sit side by side.</li>
+          <li><b>One visibility rule, checked in one place.</b> A recipe is Only me, Friends or Everyone, and every read on the server goes through the same rule, so the feed, profiles and saves can't disagree about who sees what.</li>
+          <li><b>Save versus copy.</b> Saving bookmarks the original and follows the owner's edits; copying gives you your own private version that remembers where it came from.</li>
+          <li><b>Nutrition from Health, not a second database.</b> Ingredients are matched to Health's foods (its search lists foods you've logged before first), and a match is stored with the recipe, so a friend who copies it can log it too.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>No AI, on purpose</h3>
+        <ul class="unique">
+          <li>Matching an ingredient is a search plus a unit conversion: a weight, or a cup or clove through the food's own portions. Anything it can't turn into grams (“salt, to taste”) is left for you to match instead of being guessed.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Try this</h3>
+        <ol class="try" id="r-try">
+          <li data-on="recipes:read:/recipes/api/recipes/:id"><span class="box" aria-hidden="true">✓</span><span class="t">On <b>Feed</b>, open Jordan's Instant Pot Quesabirria, shared with everyone.</span></li>
+          <li data-on="recipes:read:/recipes/api/friends"><span class="box" aria-hidden="true">✓</span><span class="t">On <b>Friends</b>, see Sam's friends and Alex's request waiting.</span></li>
+          <li data-on="recipes:read:/recipes/api/recipes/mine"><span class="box" aria-hidden="true">✓</span><span class="t">In <b>Cookbook</b>, open Chicken Tikka Masala and change “How much chicken do you have?” to 1 lb.</span></li>
+          <li data-on="recipes:write:/api/recipes/app/saved-meal"><span class="box" aria-hidden="true">✓</span><span class="t">Scroll to <b>Nutrition</b> for per-serving numbers from Health. Tap <b>Save as a meal</b>, then log it in Health.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <section class="app" id="claro" aria-labelledby="claro-h">
     <div class="phone-col">
       <div class="phone" role="region" aria-label="Claro app, running live">
@@ -169,14 +295,14 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
         </div>
       </div>
       <div class="caption">Demo learner “Sam”: two weeks in, ten Everyday units done.</div>
-      <button class="reset" type="button" data-reset="claro">Start Claro over</button>
+      <button class="reset" type="button" data-reset>Start the demo over</button>
     </div>
     <div class="story">
       <div>
         <div class="tag">Claro · Expo / React Native · iPhone</div>
         <h2 id="claro-h">Everyday Mexican Spanish for a returning beginner</h2>
       </div>
-      <p>Claro is a Spanish course built around real situations in Mexico: ordering at a fonda, calling the plumber, texting a friend. Units run from A1 to B2, with spaced reviews, graded readings, conversations and a hands-free “Just listen” mode for work. There is no account: progress lives on the phone.</p>
+      <p>Claro is a Spanish course built around real situations in Mexico: ordering at a fonda, calling the plumber, texting a friend. Units run from A1 to B2, with spaced reviews, graded readings, conversations and a hands-free “Just listen” mode for work. There is no account: progress lives on the phone. The one thing it sends is practice minutes, to a Health habit you link it to.</p>
       <div>
         <h3>What makes it different</h3>
         <ul class="unique">
@@ -192,6 +318,7 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
         <ul class="unique">
           <li><b>Answer translator: Claude Haiku 5.5, picked Oct 28.</b> The word-by-word check shows where a typed answer differs from the model sentence, but only a language model can say what the learner's own Spanish actually means. Ten models were given the same beginner answers, mistakes included, and compared on how well they read them. Haiku read them best, at about $0.00025 an answer. Gemini 3.1 Flash Lite, at the same price, is the fallback.</li>
           <li>It only ever shows a translation and up to three notes. It never changes a rating or a score, it is sent only the prompt, your answer and the model answers, and it goes quiet offline. It is off in this demo.</li>
+          <li><b>Same pattern as Health:</b> the AI call is made by the Health server, never the phone, so no API key ships in the app.</li>
           <li><b>No AI where a rule does better.</b> Review timing is the FSRS algorithm, the writing checker is hand-written rules for known slips, and “Say it and check” uses the phone's own Spanish (Mexico) speech recognizer.</li>
         </ul>
       </div>
@@ -209,17 +336,40 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
     </div>
   </section>
 
+  <section class="band" id="ai" aria-labelledby="ai-h">
+    <h2 id="ai-h">How AI is used, in building and in the apps</h2>
+    <div class="cols">
+      <div>
+        <h3>Built with coding agents</h3>
+        <p>The apps, their servers, the home server and this page are written with Claude Code and Codex. Each repository has an AGENTS.md runbook the agents work from (how to test, deploy and roll back, and what never to touch), and tests decide whether a change ships: about 940 server tests for Health, plus tests for Recipes and Claro. This page rebuilds itself when an app changes, and refuses to publish if a scripted step fails, a server errors or a real name turns up in the recording.</p>
+      </div>
+      <div>
+        <h3>Models picked by testing them</h3>
+        <p>Health's photo model was chosen by scoring candidates on 20 Nutrition5k plates with known calories, and by rerunning one photo to check the answer holds still. Claro's translator was chosen from ten models given the same beginner answers. The details are under each app. Models are server settings, so they change without an app update.</p>
+      </div>
+      <div>
+        <h3>Guardrails around every call</h3>
+        <p>Replies must match a JSON schema, and requests only go to providers that enforce it. A failure falls back to a second model, then reports an error instead of guessing. Photos are never stored, and the translator can't change a score. Where a rule does better than a model (review timing, writing slips, unit conversion), there is no model.</p>
+      </div>
+      <div>
+        <h3>Tools for AI agents: PickleCourts</h3>
+        <p>Ira is a co-developer of <a href="https://picklecourts.rent">PickleCourts</a>, a court-booking marketplace. On top of the read-only MCP server built by the other co-developer, Ira added venue search, account linking (OAuth), the booking tools and a plugin with a booking skill for Claude and ChatGPT. Booking needs a single-use confirmation token from a priced quote, so an assistant can't book twice or book something you didn't confirm. Search has been live in Claude's connector directory since Oct 12; the ChatGPT plugin with booking is in OpenAI's review.</p>
+      </div>
+    </div>
+    <p class="note"><b>Not built yet:</b> a dedicated evaluation suite for these AI features. The model choices rest on the one-off tests above, and the plugin's reviewer test prompts (five that should trigger tools, three that shouldn't) are the start of one for booking.</p>
+  </section>
+
   <footer>
-    <p><b>What is real.</b> Both phones run the apps' own source code, unmodified, exported for the web with Expo. Claro keeps its state on the device, so it runs here as on the phone (only the optional answer translator, which needs the home server, is off); its demo learner was built by Claro's own scheduling and course code.</p>
-    <p><b>What is stood in.</b> Health talks to a server at home. For this page, that real server ran against a throwaway database of invented people while a script tapped through this same build, and the phone replays those recorded answers. Your taps move the replay along, and settings you change are kept on the page; a change the script never made shows the closest recorded result instead. The AI photo estimates are canned answers that the server then processed for real. The browser has no camera roll, notifications or speech recognition, so those use small stand-ins.</p>
+    <p><b>What is real.</b> All three phones run the apps' own source code, unmodified, exported for the web with Expo. Claro keeps its state on the device, so it runs here as on the phone (the optional answer translator, which needs the home server, is off); its demo learner was built by Claro's own scheduling and course code.</p>
+    <p><b>What is stood in.</b> Health and Recipes talk to servers at home. For this page, those real servers ran against throwaway databases of invented people while a script tapped through these same builds, and the phones replay the recorded answers. The three phones share one recording, so a change in one shows up in the others. Your taps move the replay along, and settings you change are kept on the page; a change the script never made shows the closest recorded result instead. Reloading the page starts everything over. The AI photo estimates are canned answers that the server then processed for real. The browser has no camera roll, notifications or speech recognition, so those use small stand-ins.</p>
     <p><b>Camera roll photos</b> are real meals from Wikimedia Commons, cropped and resized; the AI answers about them are pre-written. <a href="https://commons.wikimedia.org/wiki/File:Tacos_de_Barba_Birria_6.jpg">Tacos</a> by City Foodsters (<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Oatmeal,_blueberries_and_almond_milk.jpg">Oatmeal</a> by Ann Larie Valentine (<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Caffe_Latte_cup.jpg">Latte</a> by Maksym Kozlenko (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Tomato_sauce_spaghetti,_at_Restaurant_Gusto_(2013.07.13)_2.jpg">Spaghetti</a> by Lombroso (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Salad_bowl_at_Bröd_&_Salt.jpg">Salad</a> by JIP (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>); <a href="https://commons.wikimedia.org/wiki/File:Smashed_Avocado_On_Toast_(with_one_poached_egg)_-_Jonny's_2026-01-06.jpg">Avocado toast</a> by Andy Li (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>).</p>
-    <p>Left out on purpose: tools without a phone screen (the Gmail organizer, the Spotify playlist jobs) and apps built for work or shared with someone else.</p>
+    <p>The Instant Pot recipes are Ira's own. Left out on purpose: tools without a phone screen (the Gmail organizer, the Spotify playlist jobs) and apps built for work.</p>
   </footer>
 </div>
 
 <script>
 // Scales each app (drawn at iPhone width) into its phone frame, ticks off the
-// Health "Try this" list from what the replay reports, and resets the demos.
+// "Try this" lists from what the replays report, and restarts the demo.
 (function () {
   function fit() {
     document.querySelectorAll('.fit').forEach(function (box) {
@@ -235,11 +385,15 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
     f.addEventListener('load', function () { var l = f.previousElementSibling; if (l) l.remove(); });
   });
 
-  var items = Array.prototype.slice.call(document.querySelectorAll('#h-try li'));
+  // "Try this" lists tick themselves off from what each phone's replay reports.
+  var items = Array.prototype.slice.call(document.querySelectorAll('.try li[data-on]'));
+  var healthItems = items.filter(function (li) { return li.closest('#h-try'); });
   var progress = document.getElementById('h-progress');
+  var claroSent = false;
+  var ID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g;
   function show() {
-    var n = items.filter(function (li) { return li.classList.contains('done'); }).length;
-    progress.textContent = n + ' of ' + items.length + ' tried';
+    var n = healthItems.filter(function (li) { return li.classList.contains('done'); }).length;
+    progress.textContent = n + ' of ' + healthItems.length + ' tried';
   }
   function mark(tag) {
     items.forEach(function (li) { if (li.dataset.on === tag) li.classList.add('done'); });
@@ -248,24 +402,31 @@ footer p { max-width: 70ch; margin: 0 0 8px; }
   show();
   window.addEventListener('message', function (e) {
     var m = e.data;
-    if (!m || m.demo !== 'health') return;
+    if (!m || ['health', 'recipes', 'claro'].indexOf(m.demo) < 0) return;
+    var path = (m.path || '').split('?')[0].replace(ID, ':id');
+    if (m.kind === 'read' || m.kind === 'write') mark(m.demo + ':' + m.kind + ':' + path);
+    if (m.demo === 'claro' && m.kind === 'write' && path === '/api/practice/minutes') claroSent = true;
+    if (m.demo !== 'health') return;
     if (m.kind === 'estimate') mark('estimate:' + m.key);
-    if (m.kind === 'read') mark('read:' + m.path.split('?')[0]);
+    if (m.kind === 'read') {
+      mark('read:' + path);
+      if (claroSent && path.indexOf('/api/habits/') === 0) mark('health:read:habits-after-claro');
+    }
     if (m.kind === 'write') {
-      if (m.path === '/api/meal-checkin') mark(/"skipped"/.test(m.body || '') ? 'checkin:skipped' : 'checkin:feeling');
-      else mark('write:' + m.path);
+      if (/^\/api\/meals\/[^/]+\/log$/.test(path)) mark('health:write:meal-log');
+      if (path === '/api/meal-checkin') mark(/"skipped"/.test(m.body || '') ? 'checkin:skipped' : 'checkin:feeling');
+      else mark('write:' + path);
     }
   });
 
+  // One shared replay, so starting over restarts all three phones together.
   document.querySelectorAll('[data-reset]').forEach(function (b) {
     b.addEventListener('click', function () {
-      var app = b.dataset.reset;
-      try {
-        Object.keys(localStorage).forEach(function (k) { if (app === 'claro' ? /^claro/.test(k) : !/^claro/.test(k)) localStorage.removeItem(k); });
-      } catch (e) {}
-      if (app === 'health') { items.forEach(function (li) { li.classList.remove('done'); }); show(); }
-      var f = document.getElementById(app === 'claro' ? 'c-frame' : 'h-frame');
-      f.src = f.getAttribute('src');
+      try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); } catch (e) {}
+      items.forEach(function (li) { li.classList.remove('done'); });
+      claroSent = false;
+      show();
+      document.querySelectorAll('.fit iframe').forEach(function (f) { f.src = f.getAttribute('src'); });
     });
   });
 })();

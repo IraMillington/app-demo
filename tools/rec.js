@@ -3,6 +3,8 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const HOST = 'https://health.tailc51c3c.ts.net';
 const LOCAL = 'http://127.0.0.1:8080';
+// The Recipes server rides on the same host under /recipes (Funnel strips the prefix).
+const RECIPES = 'http://127.0.0.1:8092';
 async function setup(opts = {}) {
   const login = await (await fetch(LOCAL + '/api/accounts/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: 'sam', password: 'demo-pass-123' }) })).json();
   const b = await chromium.launch();
@@ -18,7 +20,8 @@ async function setup(opts = {}) {
     const headers = { ...req.headers() };
     delete headers['host'];
     if (opts.rewrite) { const r = await opts.rewrite(req, url, body, headers); if (r) { body = r.body; Object.assign(headers, r.headers || {}); } }
-    const resp = await fetch(LOCAL + url.pathname + url.search, { method: req.method(), headers, body: ['GET', 'HEAD'].includes(req.method()) ? undefined : body });
+    const target = url.pathname.startsWith('/recipes/') ? RECIPES + url.pathname.slice('/recipes'.length) : LOCAL + url.pathname;
+    const resp = await fetch(target + url.search, { method: req.method(), headers, body: ['GET', 'HEAD'].includes(req.method()) ? undefined : body });
     const text = await resp.text();
     log.push({ method: req.method(), path: url.pathname + url.search, reqBody: req.method() === 'GET' ? null : (req.headers()['content-type'] || '').includes('json') ? (req.postData() || '') : '[form]', status: resp.status, body: text });
     await route.fulfill({ status: resp.status, contentType: resp.headers.get('content-type') || 'application/json', body: text, headers: { 'access-control-allow-origin': '*' } });
@@ -27,7 +30,7 @@ async function setup(opts = {}) {
   p.setDefaultTimeout(6000);
   p.on('pageerror', (e) => errs.push('PAGEERR ' + e.message));
   p.on('console', (m) => { if (m.type() === 'error') errs.push(m.text().slice(0, 200)); });
-  return { b, p, log, errs };
+  return { b, ctx, p, log, errs };
 }
 module.exports = { setup };
 if (require.main === module) {

@@ -3,6 +3,7 @@
 const fs = require('fs');
 const { setup } = require('./rec.js');
 const { makeRewrite, cannedKey } = require('./estimate-rewrite.js');
+const { claroStorage, recipesStorage } = require('./demo-links.js');
 const ST = __dirname + '/stack', PH = __dirname + '/demo-photos';
 
 (async () => {
@@ -13,7 +14,7 @@ const ST = __dirname + '/stack', PH = __dirname + '/demo-photos';
     if (r) lastPicked = r.meta.picked;
     return r;
   };
-  const { b, p, log, errs } = await setup({ rewrite: rw });
+  const { b, ctx, p, log, errs } = await setup({ rewrite: rw });
   page = p;
   const wait = (ms = 1500) => p.waitForTimeout(ms);
   const step = async (name, fn) => {
@@ -52,6 +53,24 @@ const ST = __dirname + '/stack', PH = __dirname + '/demo-photos';
   });
   await step('back from search', back);
 
+  // Claro sends today's practice minutes (it also does this by itself shortly
+  // after opening), which tick Health's "Spanish practice" habit. Recorded first
+  // of the cross-app changes so the site's Claro can make it on its own.
+  const cstep = async (name, fn) => { const n0 = log.length; try { await fn(); } catch (e) { console.log('STEP FAILED', name, e.message.split('\n')[0]); } await p.waitForTimeout(1800); console.log(`-- ${name}: ${log.slice(n0).map((l) => `${l.status} ${l.method} ${l.path}`).join(', ')}`); };
+  const links = JSON.parse(fs.readFileSync(ST + '/links.json', 'utf8'));
+  const cp = await ctx.newPage();
+  cp.setDefaultTimeout(6000);
+  cp.on('pageerror', (e) => errs.push('CLARO ' + e.message));
+  await cp.addInitScript((st) => { for (const [k, v] of Object.entries(st)) localStorage.setItem(k, v); }, claroStorage(__dirname + '/claro-seed.json', links.claro, process.env.DEMO_DATE));
+  await cstep('claro open', async () => { await cp.goto('http://localhost:8414/'); await cp.waitForTimeout(4000); });
+  await cstep('claro settings', () => cp.locator('[aria-label="Settings"]').click());
+  await cstep('claro send now', async () => { await cp.getByText('Send now', { exact: true }).click(); await cp.waitForTimeout(2500); await cp.screenshot({ path: 'tour-claro-sent.png', fullPage: true }); });
+  await p.bringToFront();
+  await step('habit ticked by claro', async () => { await p.locator('[role=tab][aria-label="Check-in"]').click(); await wait(2500); await p.screenshot({ path: 'tour-claro-habit.png', fullPage: true }); });
+  await cp.close();
+  await step('food tab after claro', () => p.locator('[role=tab][aria-label="Food"]').click());
+
+
   // Photo estimates: every single photo, both two-angle pairs, and one mixed pair.
   const combos = [['tacos'], ['tacosSide'], ['latte'], ['bowl'], ['bowlSide'], ['pasta'], ['salad'], ['toast'], ['bowl', 'bowlSide'], ['tacos', 'latte'], ['tacos', 'tacosSide']];
   for (const combo of combos) {
@@ -72,7 +91,36 @@ const ST = __dirname + '/stack', PH = __dirname + '/demo-photos';
     });
   }
 
+  // Recipes (signed in with Sam's Health login) saves a recipe to Health's saved
+  // meals, which Health then logs.
+  const rlogin = await (await fetch('http://127.0.0.1:8092/api/accounts/login', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-API-Key': 'demo' }, body: JSON.stringify({ username: 'sam', password: 'demo-pass-123' }) })).json();
+  const rp = await ctx.newPage();
+  rp.setDefaultTimeout(6000);
+  rp.on('pageerror', (e) => errs.push('RECIPES ' + e.message));
+  await rp.addInitScript((st) => { for (const [k, v] of Object.entries(st)) localStorage.setItem(k, v); }, recipesStorage(rlogin.token, rlogin.health_link_code));
+  const rstep = async (name, fn) => { const n0 = log.length; try { await fn(); } catch (e) { console.log('STEP FAILED', name, e.message.split('\n')[0]); } await rp.waitForTimeout(1800); console.log(`-- ${name}: ${log.slice(n0).map((l) => `${l.status} ${l.method} ${l.path}`).join(', ')}`); };
+  await rstep('recipes feed', async () => { await rp.goto('http://localhost:8413/'); await rp.waitForTimeout(5000); await rp.screenshot({ path: 'tour-recipes-feed.png' }); });
+  await rstep('recipes quesabirria', () => rp.getByText('Instant Pot Quesabirria').first().click());
+  await rstep('recipes back', () => rp.locator('[aria-label$=", back"], [aria-label="Go back"]').last().click());
+  await rstep('recipes friends', () => rp.getByText('Friends', { exact: true }).last().click());
+  await rstep('recipes cookbook', () => rp.getByText('Cookbook', { exact: true }).last().click());
+  await rstep('recipes tikka', async () => { await rp.getByText('Instant Pot Chicken Tikka Masala').first().click(); await rp.waitForTimeout(4000); await rp.screenshot({ path: 'tour-recipes-tikka.png', fullPage: true }); });
+  await rstep('recipes save as meal', () => rp.getByText('Save as a meal', { exact: true }).last().click());
+  await rstep('recipes raita', async () => { await rp.locator('[aria-label$=", back"], [aria-label="Go back"]').last().click(); await rp.waitForTimeout(1500); await rp.getByText('Cucumber Mint Raita').first().click(); await rp.waitForTimeout(3000); });
+  await rstep('recipes settings', async () => { await rp.locator('[aria-label$=", back"], [aria-label="Go back"]').last().click(); await rp.waitForTimeout(1000); await rp.getByText('Settings', { exact: true }).last().click(); });
+
+  await rp.close();
+  await p.bringToFront();
+  await step('food tab for saved meal', () => p.locator('[role=tab][aria-label="Food"]').click());
+  await step('add dinner with saved meal', async () => {
+    await p.locator('[aria-label^="Add food to Dinner"]').last().click(); await wait(3000);
+    await p.screenshot({ path: 'tour-saved-meal.png' });
+    await p.getByText('Instant Pot Chicken Tikka Masala').first().click(); await wait(3000);
+  });
+  await step('diary after saved meal', async () => { await p.screenshot({ path: 'tour-diary-tikka.png', fullPage: true }); });
+
   // Writes on Today, in the order the page suggests trying them.
+  await step('food tab again', () => p.locator('[role=tab][aria-label="Food"]').click());
   await step('water', () => p.locator('[aria-label="Add one Glass, 8 ounces"]').click());
   await step('skip snacks', () => p.getByText('Didn’t eat this meal').last().click());
   await step('check-in tab', () => p.locator('[role=tab][aria-label="Check-in"]').click());

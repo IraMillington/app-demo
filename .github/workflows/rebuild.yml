@@ -1,11 +1,11 @@
-# Rebuilds this site from the current Health and Claro sources. Every three
-# hours it checks whether either app's default branch moved (against
+# Rebuilds this site from the current Health, Recipes and Claro sources. Every
+# three hours it checks whether an app's default branch moved (against
 # build.json) and builds only then; a change to tools/ or a manual run always
 # builds. The built site is committed to the top of main, which Pages serves.
 # See tools/README.md.
 #
-# Secret: DEMO_TOKEN, a fine-grained token with Contents read on health-app
-# and claro-spanish. Pushing here uses the workflow's own token.
+# Secret: DEMO_TOKEN, a fine-grained token with Contents read on health-app,
+# claro-spanish and recipes-app. Pushing here uses the workflow's own token.
 name: Rebuild the demo
 
 # This repo is public, so its Actions runs do not use the account's minutes.
@@ -28,6 +28,7 @@ jobs:
       build: ${{ steps.check.outputs.build }}
       health: ${{ steps.check.outputs.health }}
       claro: ${{ steps.check.outputs.claro }}
+      recipes: ${{ steps.check.outputs.recipes }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,15 +44,16 @@ jobs:
           head() { git ls-remote "https://x-access-token:${TOKEN}@github.com/IraMillington/$1.git" "refs/heads/$2" | cut -f1; }
           health=$(head health-app master)
           claro=$(head claro-spanish main)
-          [ -n "$health" ] && [ -n "$claro" ] || { echo "cannot read the app repos; check DEMO_TOKEN" >&2; exit 1; }
+          recipes=$(head recipes-app main)
+          [ -n "$health" ] && [ -n "$claro" ] && [ -n "$recipes" ] || { echo "cannot read the app repos; check DEMO_TOKEN" >&2; exit 1; }
           deployed=$(cat build.json 2>/dev/null || echo '{}')
-          if [ "$EVENT" != schedule ] || [ "$(echo "$deployed" | jq -r .health)" != "$health" ] || [ "$(echo "$deployed" | jq -r .claro)" != "$claro" ]; then
+          if [ "$EVENT" != schedule ] || [ "$(echo "$deployed" | jq -r .health)" != "$health" ] || [ "$(echo "$deployed" | jq -r .claro)" != "$claro" ] || [ "$(echo "$deployed" | jq -r .recipes)" != "$recipes" ]; then
             build=true
           else
             build=false
           fi
-          echo "health=$health claro=$claro build=$build"
-          { echo "health=$health"; echo "claro=$claro"; echo "build=$build"; } >> "$GITHUB_OUTPUT"
+          echo "health=$health claro=$claro recipes=$recipes build=$build"
+          { echo "health=$health"; echo "claro=$claro"; echo "recipes=$recipes"; echo "build=$build"; } >> "$GITHUB_OUTPUT"
 
   build:
     needs: check
@@ -84,6 +86,13 @@ jobs:
           token: ${{ secrets.DEMO_TOKEN }}
           path: tools/claro
           persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: IraMillington/recipes-app
+          ref: ${{ needs.check.outputs.recipes }}
+          token: ${{ secrets.DEMO_TOKEN }}
+          path: tools/recipes
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -114,4 +123,5 @@ jobs:
         env:
           HEALTH: ${{ needs.check.outputs.health }}
           CLARO: ${{ needs.check.outputs.claro }}
-        run: tools/ci/publish.sh tools/site . "$HEALTH" "$CLARO" && git push -q origin HEAD:main
+          RECIPES: ${{ needs.check.outputs.recipes }}
+        run: tools/ci/publish.sh tools/site . "$HEALTH" "$CLARO" "$RECIPES" && git push -q origin HEAD:main

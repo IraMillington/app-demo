@@ -1,0 +1,182 @@
+{
+ "beef chuck arm pot roast raw": {
+  "source": "fdc",
+  "source_id": "168668",
+  "name": "Beef, chuck, arm pot roast, separable lean and fat, trimmed to 1/8\" fat, choice, raw"
+ },
+ "peppers ancho dried": {
+  "source": "fdc",
+  "source_id": "169396",
+  "name": "Peppers, ancho, dried"
+ },
+ "onions raw": {
+  "source": "fdc",
+  "source_id": "170000",
+  "name": "Onions, raw"
+ },
+ "garlic raw": {
+  "source": "fdc",
+  "source_id": "1104647",
+  "name": "Garlic, raw"
+ },
+ "tomatoes red ripe canned packed in tomato juice": {
+  "source": "fdc",
+  "source_id": "170051",
+  "name": "Tomatoes, red, ripe, canned, packed in tomato juice"
+ },
+ "soup beef broth bouillon consomme": {
+  "source": "fdc",
+  "source_id": "174557",
+  "name": "Soup, beef broth, bouillon, consomme, prepared with equal volume water"
+ },
+ "vinegar cider": {
+  "source": "fdc",
+  "source_id": "173469",
+  "name": "Vinegar, cider"
+ },
+ "spices cumin seed": {
+  "source": "fdc",
+  "source_id": "170923",
+  "name": "Spices, cumin seed"
+ },
+ "spices oregano dried": {
+  "source": "fdc",
+  "source_id": "171328",
+  "name": "Spices, oregano, dried"
+ },
+ "spices cinnamon ground": {
+  "source": "fdc",
+  "source_id": "171320",
+  "name": "Spices, cinnamon, ground"
+ },
+ "oil canola": {
+  "source": "fdc",
+  "source_id": "748278",
+  "name": "Oil, canola"
+ },
+ "tortillas ready to bake or fry corn": {
+  "source": "fdc",
+  "source_id": "175036",
+  "name": "Tortillas, ready-to-bake or -fry, corn"
+ },
+ "coriander cilantro leaves raw": {
+  "source": "fdc",
+  "source_id": "169997",
+  "name": "Coriander (cilantro) leaves, raw"
+ },
+ "limes raw": {
+  "source": "fdc",
+  "source_id": "168155",
+  "name": "Limes, raw"
+ },
+ "cheese monterey": {
+  "source": "fdc",
+  "source_id": "2705720",
+  "name": "Cheese, Monterey"
+ },
+ "oats raw": {
+  "source": "fdc",
+  "source_id": "2708489",
+  "name": "Oats, raw"
+ },
+ "milk reduced fat 2%": {
+  "source": "fdc",
+  "source_id": "2705386",
+  "name": "Milk, reduced fat (2%)"
+ },
+ "seeds chia seeds dried": {
+  "source": "fdc",
+  "source_id": "170554",
+  "name": "Seeds, chia seeds, dried"
+ },
+ "peanut butter smooth style without salt": {
+  "source": "fdc",
+  "source_id": "172470",
+  "name": "Peanut butter, smooth style, without salt"
+ },
+ "syrups maple": {
+  "source": "fdc",
+  "source_id": "169661",
+  "name": "Syrups, maple"
+ },
+ "blueberries raw": {
+  "source": "fdc",
+  "source_id": "2346411",
+  "name": "Blueberries, raw"
+ },
+ "salt table": {
+  "source": "fdc",
+  "source_id": "173468",
+  "name": "Salt, table"
+ },
+ "spearmint fresh": {
+  "source": "fdc",
+  "source_id": "173475",
+  "name": "Spearmint, fresh"
+ },
+ "lemon juice raw": {
+  "source": "fdc",
+  "source_id": "167747",
+  "name": "Lemon juice, raw"
+ },
+ "ginger root raw": {
+  "source": "fdc",
+  "source_id": "169231",
+  "name": "Ginger root, raw"
+ },
+ "spices curry powder": {
+  "source": "fdc",
+  "source_id": "170924",
+  "name": "Spices, curry powder"
+ },
+ "spices coriander seed": {
+  "source": "fdc",
+  "source_id": "170922",
+  "name": "Spices, coriander seed"
+ },
+ "spices paprika": {
+  "source": "fdc",
+  "source_id": "171329",
+  "name": "Spices, paprika"
+ },
+ "spices turmeric ground": {
+  "source": "fdc",
+  "source_id": "172231",
+  "name": "Spices, turmeric, ground"
+ },
+ "spices pepper red or cayenne": {
+  "source": "fdc",
+  "source_id": "170932",
+  "name": "Spices, pepper, red or cayenne"
+ },
+ "spices chili powder": {
+  "source": "fdc",
+  "source_id": "171319",
+  "name": "Spices, chili powder"
+ },
+ "butter oil anhydrous": {
+  "source": "fdc",
+  "source_id": "173412",
+  "name": "Butter oil, anhydrous"
+ },
+ "cream fluid heavy whipping": {
+  "source": "fdc",
+  "source_id": "170859",
+  "name": "Cream, fluid, heavy whipping"
+ },
+ "yogurt plain whole milk": {
+  "source": "fdc",
+  "source_id": "2259794",
+  "name": "Yogurt, Greek, plain, whole milk"
+ },
+ "cucumber with peel raw": {
+  "source": "fdc",
+  "source_id": "2346406",
+  "name": "Cucumber, with peel, raw"
+ },
+ "chicken breast boneless skinless raw": {
+  "source": "fdc",
+  "source_id": "2646170",
+  "name": "Chicken, breast, boneless, skinless, raw"
+ }
+}

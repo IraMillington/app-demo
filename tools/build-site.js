@@ -6,6 +6,7 @@ const path = require('path');
 
 const [outer, out] = process.argv.slice(2);
 const HERE = __dirname;
+const { claroStorage, recipesStorage } = require('./demo-links.js');
 // The day the data was recorded; the page pins "today" to it.
 const DEMO_DATE = process.env.DEMO_DATE || '2026-10-30';
 const DAY = DEMO_DATE.split('-').map(Number).map((n, i) => (i === 1 ? n - 1 : n));
@@ -35,13 +36,13 @@ function relativize(dir) {
   walk(dir);
 }
 
-function app(name, storage, extra) {
+function app(name, storage, extra, vars = {}) {
   const dir = path.join(out, name);
   copyTree(path.join(HERE, name, 'dist-web'), dir);
   relativize(dir);
   fs.copyFileSync(path.join(HERE, 'demo-env.js'), path.join(dir, 'demo-env.js'));
   for (const [from, to] of extra) fs.copyFileSync(from, path.join(dir, to));
-  const config = `<script>window.__DEMO_DAY=${JSON.stringify(DAY)};window.__DEMO_API_HOST=${JSON.stringify(API_HOST)};window.__DEMO_STORAGE=${JSON.stringify(storage)};</script>`;
+  const config = `<script>window.__DEMO_DAY=${JSON.stringify(DAY)};window.__DEMO_API_HOST=${JSON.stringify(API_HOST)};window.__DEMO_STORAGE=${JSON.stringify(storage)};${Object.entries(vars).map(([k, v]) => `window.${k}=${JSON.stringify(v)};`).join('')}</script>`;
   const scripts = ['demo-env.js', ...extra.filter(([, to]) => to.endsWith('.js')).map(([, to]) => to)].map((s) => `<script src="./${s}"></script>`).join('');
   const index = path.join(dir, 'index.html');
   fs.writeFileSync(index, fs.readFileSync(index, 'utf8').replace('</head>', `  ${config}${scripts}\n  </head>`));
@@ -50,11 +51,13 @@ function app(name, storage, extra) {
 const recordings = JSON.parse(fs.readFileSync(path.join(HERE, 'recordings.json'), 'utf8'));
 const profiles = JSON.parse(recordings.find((e) => e.path === '/api/profiles').body);
 const sam = (profiles.profiles || profiles).find((p) => /sam/i.test(p.name || p.display_name || p.id));
-app('health', { account_token: 'demo', profile: sam.id, onboarding_complete_v1: 'true', whats_new_seen_v1: '9999' }, [
-  [path.join(HERE, 'replay.js'), 'replay.js'],
-]);
-fs.copyFileSync(path.join(HERE, 'recordings.json'), path.join(out, 'health', 'recordings.json'));
-app('claro', JSON.parse(fs.readFileSync(path.join(HERE, 'claro-seed.json'), 'utf8')), []);
+// One recording serves all three phones, so a change made in one shows in the others.
+const replay = [[path.join(HERE, 'replay.js'), 'replay.js']];
+const shared = (name) => ({ __DEMO_APP: name, __DEMO_RECORDINGS: '../recordings.json' });
+app('health', { account_token: 'demo', profile: sam.id, onboarding_complete_v1: 'true', whats_new_seen_v1: '9999' }, replay, shared('health'));
+app('recipes', recipesStorage('demo', 'demo'), replay, shared('recipes'));
+app('claro', claroStorage(path.join(HERE, 'claro-seed.json'), 'demo', DEMO_DATE), replay, shared('claro'));
+fs.copyFileSync(path.join(HERE, 'recordings.json'), path.join(out, 'recordings.json'));
 fs.writeFileSync(path.join(out, 'index.html'), fs.readFileSync(outer, 'utf8').replace(/\{\{DEMO_DAY\}\}/g, DAY_LABEL));
 
 const files = [];
