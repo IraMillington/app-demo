@@ -21,7 +21,7 @@ sed -i 's#"/app/fonts/#"/app-demo/picklecourts/fonts/#g' picklecourts/public/ind
 (cd picklecourts && npm ci --no-audit --no-fund > /dev/null)
 (cd picklecourts/backend && npm ci --no-audit --no-fund > /dev/null)
 # A host that cannot resolve: a call the replay misses never reaches the live service.
-(cd picklecourts && EXPO_PUBLIC_API_URL=https://picklecourts-demo.invalid CI=1 \
+(cd picklecourts && EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=DEMO_MAPS_KEY_PLACEHOLDER EXPO_PUBLIC_API_URL=https://picklecourts-demo.invalid CI=1 \
   npx expo export --platform web --clear --output-dir dist-web > /dev/null)
 
 pkill -f "node src/index.js" || true

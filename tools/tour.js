@@ -103,6 +103,13 @@ const ST = __dirname + '/stack', PH = __dirname + '/demo-photos';
   await rstep('recipes quesabirria', () => rp.getByText('Instant Pot Quesabirria').first().click());
   await rstep('recipes back', () => rp.locator('[aria-label$=", back"], [aria-label="Go back"]').last().click());
   await rstep('recipes friends', () => rp.getByText('Friends', { exact: true }).last().click());
+  // Each person on Friends opens their profile and shared recipes.
+  for (const who of ['jordan', 'priya', 'alex']) {
+    await rstep('recipes profile ' + who, async () => {
+      await rp.getByText('@' + who, { exact: true }).last().click(); await rp.waitForTimeout(2000);
+      await rp.locator('[aria-label$=", back"], [aria-label="Go back"]').last().click();
+    });
+  }
   await rstep('recipes cookbook', () => rp.getByText('Cookbook', { exact: true }).last().click());
   await rstep('recipes tikka', async () => { await rp.getByText('Instant Pot Chicken Tikka Masala').first().click(); await rp.waitForTimeout(4000); await rp.screenshot({ path: 'tour-recipes-tikka.png', fullPage: true }); });
   await rstep('recipes save as meal', () => rp.getByText('Save as a meal', { exact: true }).last().click());

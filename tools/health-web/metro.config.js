@@ -7,6 +7,7 @@ const config = getDefaultConfig(__dirname);
 const STUBS = {
   'expo-notifications': 'notifications.js',
   'expo-image-picker': 'image-picker.js',
+  '@kingstinct/react-native-healthkit': 'healthkit.js',
 };
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (platform === 'web' && STUBS[moduleName] && !context.originModulePath.includes(`${path.sep}demo-stubs${path.sep}`)) {

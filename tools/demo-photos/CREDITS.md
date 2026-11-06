@@ -10,4 +10,6 @@ Real meal photos from Wikimedia Commons, cropped and resized to 1200x900 by `mak
 - `salad`: [Salad bowl at Bröd & Salt.jpg](https://commons.wikimedia.org/wiki/File:Salad_bowl_at_Bröd_&_Salt.jpg) by JIP, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
 - `toast`: [Smashed Avocado On Toast (with one poached egg) - Jonny's 2026-01-06.jpg](https://commons.wikimedia.org/wiki/File:Smashed_Avocado_On_Toast_(with_one_poached_egg)_-_Jonny's_2026-01-06.jpg) by Andy Li, CC0 (https://creativecommons.org/publicdomain/zero/1.0/)
 
+- `program` (training program cover): [barbell and plates](https://www.rawpixel.com/image/5911898/image-background-public-domain-free), public domain (CC0) via rawpixel, cropped square.
+
 The CC BY-SA crops are shared under the same licence as their originals.

@@ -6,7 +6,10 @@ const SITE = 'http://127.0.0.1:8420/app-demo/index.html';
   const ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, timezoneId: process.env.TZID || 'America/Chicago' });
   const leaks = [];
   await ctx.route('https://health.tailc51c3c.ts.net/**', (r) => { leaks.push(r.request().url()); r.abort(); });
-  await ctx.route(/picklecourts|maps\.googleapis\.com/, (r) => {
+  // Google Maps is allowed (PickleCourts' map, with its key limited to the site);
+  // the test aborts it, and the app falls back to its list as without a key.
+  await ctx.route(/maps\.googleapis\.com/, (r) => r.abort());
+  await ctx.route(/picklecourts/, (r) => {
     const u = r.request().url();
     if (/^http:\/\/127\.0\.0\.1:8420\//.test(u)) return r.continue();
     leaks.push(u); r.abort();
@@ -21,17 +24,17 @@ const SITE = 'http://127.0.0.1:8420/app-demo/index.html';
   const h = p.frameLocator('#h-frame'), r = p.frameLocator('#r-frame'), c = p.frameLocator('#c-frame');
   // Across phones, in the order the page suggests: Claro sends its minutes by
   // itself, Health's habit shows them; Recipes saves a meal, Health logs it.
-  await p.locator('#claro').scrollIntoViewIfNeeded();
+  await p.click('.tabs [data-tab="claro"]'); await p.waitForTimeout(800);
   await p.waitForTimeout(20000);
-  await p.locator('#health').scrollIntoViewIfNeeded();
+  await p.click('.tabs [data-tab="health"]'); await p.waitForTimeout(800);
   await h.locator('[role=tab][aria-label="Check-in"]').click(); await p.waitForTimeout(2000);
   const habit = await h.getByText(/13 of 10 min in Claro/).count();
-  await p.locator('#recipes').scrollIntoViewIfNeeded();
+  await p.click('.tabs [data-tab="recipes"]'); await p.waitForTimeout(800);
   await r.getByText('Cookbook', { exact: true }).last().click(); await p.waitForTimeout(1500);
   await r.getByText('Instant Pot Chicken Tikka Masala').first().click(); await p.waitForTimeout(3000);
   await r.getByText('Save as a meal', { exact: true }).last().click(); await p.waitForTimeout(2000);
   await p.screenshot({ path: 's-r.png' });
-  await p.locator('#health').scrollIntoViewIfNeeded();
+  await p.click('.tabs [data-tab="health"]'); await p.waitForTimeout(800);
   await h.locator('[role=tab][aria-label="Food"]').click(); await p.waitForTimeout(1500);
   await h.locator('[aria-label^="Add food to Dinner"]').last().click(); await p.waitForTimeout(2500);
   await h.getByText('Instant Pot Chicken Tikka Masala').first().click(); await p.waitForTimeout(2500);
@@ -54,11 +57,11 @@ const SITE = 'http://127.0.0.1:8420/app-demo/index.html';
   await h.getByText('Lactose intolerance', { exact: true }).first().click(); await p.waitForTimeout(1500);
   await h.getByText('Log', { exact: true }).last().click(); await p.waitForTimeout(1500);
   await p.screenshot({ path: 's-6.png' });
-  await p.locator('#claro').scrollIntoViewIfNeeded(); await p.waitForTimeout(1000);
+  await p.click('.tabs [data-tab="claro"]'); await p.waitForTimeout(800); await p.waitForTimeout(1000);
   await p.screenshot({ path: 's-5.png' });
   // PickleCourts: browse, book with mock payment, and the tool transcript renders.
   const pc = p.frameLocator('#p-frame');
-  await p.locator('#picklecourts').scrollIntoViewIfNeeded(); await p.waitForTimeout(2500);
+  await p.click('.tabs [data-tab="picklecourts"]'); await p.waitForTimeout(800); await p.waitForTimeout(2500);
   await pc.getByText('Cottonwood Court House').first().click(); await p.waitForTimeout(2000);
   await pc.getByText('Tmrw', { exact: true }).first().click(); await p.waitForTimeout(1500);
   await (await p.locator('#p-frame').elementHandle()).contentFrame().then((f) => f.evaluate(() => history.back())); await p.waitForTimeout(2000);
@@ -77,6 +80,6 @@ const SITE = 'http://127.0.0.1:8420/app-demo/index.html';
   const m = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
   const mp = await m.newPage(); await mp.goto(SITE); await mp.waitForTimeout(5000);
   console.log('mobile overflow', await mp.evaluate(() => document.documentElement.scrollWidth));
-  await mp.locator('#health .phone').scrollIntoViewIfNeeded(); await mp.screenshot({ path: 's-m.png' });
+  await mp.click('.tabs [data-tab="health"]'); await mp.waitForTimeout(1500); await mp.screenshot({ path: 's-m.png' });
   await b.close();
 })();

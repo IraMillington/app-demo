@@ -57,7 +57,7 @@ const sam = (profiles.profiles || profiles).find((p) => /sam/i.test(p.name || p.
 // One recording serves all three phones, so a change made in one shows in the others.
 const replay = [[path.join(HERE, 'replay.js'), 'replay.js']];
 const shared = (name) => ({ __DEMO_APP: name, __DEMO_RECORDINGS: '../recordings.json' });
-app('health', { account_token: 'demo', profile: sam.id, onboarding_complete_v1: 'true', whats_new_seen_v1: '9999' }, replay, shared('health'));
+app('health', { account_token: 'demo', profile: sam.id, onboarding_complete_v1: 'true', whats_new_seen_v1: '9999', appearance_v1: 'dark' }, replay, shared('health'));
 app('recipes', recipesStorage('demo', 'demo'), replay, shared('recipes'));
 app('claro', claroStorage(path.join(HERE, 'claro-seed.json'), 'demo', DEMO_DATE), replay, shared('claro'));
 fs.copyFileSync(path.join(HERE, 'recordings.json'), path.join(out, 'recordings.json'));
@@ -69,8 +69,17 @@ if (fs.existsSync(path.join(HERE, 'pc-recordings.json'))) {
   const pcDate = JSON.parse(fs.readFileSync(path.join(HERE, 'pc-mcp.json'), 'utf8')).demo_date;
   const pcDay = pcDate.split('-').map(Number).map((n, i) => (i === 1 ? n - 1 : n));
   PC_LABEL = new Date(Date.UTC(pcDay[0], pcDay[1], pcDay[2], 12)).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
-  app('picklecourts', {}, [...replay, [path.join(HERE, 'picklecourts-web', 'no-maps.js'), 'no-maps.js'], [path.join(HERE, 'picklecourts-web', 'app-path.js'), 'app-path.js']],
+  // Its map key is filled in at build time from PC_MAPS_KEY (a browser key limited
+  // to the site); without one the map is left out and the app shows its list.
+  const mapsKey = process.env.PC_MAPS_KEY || '';
+  const pcExtra = mapsKey ? [] : [[path.join(HERE, 'picklecourts-web', 'no-maps.js'), 'no-maps.js']];
+  app('picklecourts', {}, [...replay, ...pcExtra, [path.join(HERE, 'picklecourts-web', 'app-path.js'), 'app-path.js']],
     { __DEMO_DAY: pcDay, __DEMO_APP: 'picklecourts', __DEMO_RECORDINGS: 'recordings.json', __DEMO_REPLAY_KEY: 'demo_replay_pc', __DEMO_API_HOST: PC_HOST }, null);
+  const js = path.join(out, 'picklecourts', '_expo', 'static', 'js', 'web');
+  for (const f of fs.readdirSync(js)) {
+    const t = fs.readFileSync(path.join(js, f), 'utf8');
+    if (t.includes('DEMO_MAPS_KEY_PLACEHOLDER')) fs.writeFileSync(path.join(js, f), t.split('DEMO_MAPS_KEY_PLACEHOLDER').join(mapsKey));
+  }
   fs.copyFileSync(path.join(HERE, 'pc-recordings.json'), path.join(out, 'picklecourts', 'recordings.json'));
   fs.copyFileSync(path.join(HERE, 'pc-mcp.json'), path.join(out, 'picklecourts', 'mcp.json'));
 }

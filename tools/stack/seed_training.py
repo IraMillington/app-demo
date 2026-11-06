@@ -1,7 +1,9 @@
 """The demo profile's workout program and past sessions, through the server's own
 training API: a four-day upper/lower program, five finished sessions logged with
 the app's native workout logger, and a few walks."""
+import base64
 from datetime import date, datetime, timedelta, timezone
+import os
 import sys
 import uuid
 
@@ -53,6 +55,9 @@ TEMPLATES = [
 
 program = call("POST", "/api/training/programs", {
     "name": "Upper / Lower, 4 days", "mode": "native", "level": "intermediate",
+    # Cover photo: a public-domain barbell shot (demo-photos/CREDITS.md), as the
+    # data URI the app stores when a cover is picked.
+    "image": "data:image/jpeg;base64," + base64.b64encode(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "demo-photos", "program.jpg"), "rb").read()).decode(),
     "notes": "Four rotating workouts, about 50 minutes each. Add weight once every set reaches the top of its rep range with two reps to spare.",
     "phases": [{"name": "Build", "weeks": 4, "rir": 2}, {"name": "Push", "rir": 1, "notes": "One rep closer to failure on working sets."}],
     "templates": TEMPLATES,

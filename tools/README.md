@@ -67,6 +67,20 @@ used, and "Try this" lists. It is written for people hiring for AI engineering r
 - Not in this repo: the app sources. The built bundles are published (publicly, by
   Ira's choice) at the top of `main`.
 
+## Page layout and demo shims (Nov 6)
+
+- The page is tabs (Overview, Health, Recipes, Claro, PickleCourts); hidden tabs stay laid
+  out off screen so every phone keeps running and the cross-app replay works.
+- Each app fills its whole phone screen. `demo-env.js` reports iPhone safe-area insets
+  (react-native-safe-area-context reads them through `getComputedStyle`) and lets tab-bar
+  labels overflow, which react-native-web otherwise clips. Health starts in dark mode.
+- `health-web/demo-stubs/healthkit.js` answers like a phone with today's activity, so
+  reports don't open with "Apple Health did not have new data to sync".
+- `replay.js` keeps habit ticks in `sessionStorage` and lays them over every habits read.
+- Sam's program has a cover photo (`demo-photos/program.jpg`, CC0) set by `seed_training.py`.
+- PickleCourts' map uses the `PC_MAPS_KEY` secret (a browser key limited to the site),
+  filled into the snapshot's placeholder by `build-site.js`; without it the map is left out.
+
 ## PickleCourts (a committed snapshot)
 
 The workflow's fine-grained `DEMO_TOKEN` can only cover one owner's repos, so CI cannot

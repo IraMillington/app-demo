@@ -107,6 +107,8 @@ jobs:
       - name: Build
         env:
           PGPASSWORD: demo-local-only
+          # PickleCourts' browser Maps key, limited to iramillington.github.io (optional)
+          PC_MAPS_KEY: ${{ secrets.PC_MAPS_KEY }}
         run: tools/ci/build.sh
       - name: Keep the logs
         if: always()
