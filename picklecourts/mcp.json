@@ -1,0 +1,334 @@
+{
+ "demo_date": "2026-11-06",
+ "tools": [
+  {
+   "name": "search_venues",
+   "title": "Search pickleball venues",
+   "description": "Use this when the user wants to find a place to play pickleball, or asks where to play, which courts are near them, or which clubs rent courts, near a city, neighborhood, zip code, venue name, or coordinates. Returns published PickleCourts venues with address, distance, court counts, and whether they can be booked through PickleCourts."
+  },
+  {
+   "name": "find_availability_by_venue",
+   "title": "Find court availability at a venue",
+   "description": "Use this when the user wants open pickleball court times or prices at a specific venue. Finds requested-duration court rental start times at one published PickleCourts venue on one venue-local date. Use a venue UUID, slug, or name. Prices are USD cents; results include local and UTC times. Each slot carries a booking_url that opens PickleCourts checkout for that exact time."
+  },
+  {
+   "name": "find_availability_by_region",
+   "title": "Find court availability in a region",
+   "description": "Use this when the user wants any open court in a city on a date and has not picked a venue, or asks what pickleball courts are open or bookable today, tonight, or this weekend. Finds court rental availability across published venues in one PickleCourts city or metro region for one local calendar date. Use a region UUID, slug, or name. Results are bounded and sorted by earliest time and price. Each slot carries a booking_url that opens PickleCourts checkout for that exact time."
+  }
+ ],
+ "calls": [
+  {
+   "name": "search_venues",
+   "arguments": {
+    "query": "Oklahoma City"
+   },
+   "result": {
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"query\":{\"query\":\"Oklahoma City\",\"latitude\":null,\"longitude\":null,\"radius_miles\":25,\"sport_type\":\"pickleball\",\"court_type\":\"any\",\"bookable_only\":false,\"limit\":10},\"venues\":[{\"id\":\"d0000000-0000-4000-8000-000000000001\",\"slug\":\"lanternfield-paddle-club\",\"name\":\"Lanternfield Paddle Club\",\"region\":{\"id\":\"a074ae77-1ecc-43c8-8f5b-328f9da389d0\",\"slug\":\"oklahoma-city\",\"name\":\"Oklahoma City\",\"state\":\"Oklahoma\"},\"address\":{\"street\":\"410 Demo Lane\",\"city\":\"Oklahoma City\",\"state\":\"OK\",\"postal_code\":\"73104\"},\"location\":{\"latitude\":35.489,\"longitude\":-97.53},\"distance_miles\":0.7,\"timezone\":\"America/Chicago\",\"currency\":\"USD\",\"booking_support\":\"native\",\"bookable_on_picklecourts\":true,\"court_count\":6,\"sport_types\":[\"pickleball\"],\"court_types\":[\"indoor\"],\"phone\":\"405-555-0100\",\"website\":\"https://example.com\",\"details_url\":\"https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details\"},{\"id\":\"d0000000-0000-4000-8000-000000000003\",\"slug\":\"north-canal-pickle-hall\",\"name\":\"North Canal Pickle Hall\",\"region\":{\"id\":\"a074ae77-1ecc-43c8-8f5b-328f9da389d0\",\"slug\":\"oklahoma-city\",\"name\":\"Oklahoma City\",\"state\":\"Oklahoma\"},\"address\":{\"street\":\"1200 Example Avenue\",\"city\":\"Oklahoma City\",\"state\":\"OK\",\"postal_code\":\"73104\"},\"location\":{\"latitude\":35.502,\"longitude\":-97.505},\"distance_miles\":1.3,\"timezone\":\"America/Chicago\",\"currency\":\"USD\",\"booking_support\":\"native\",\"bookable_on_picklecourts\":true,\"court_count\":8,\"sport_types\":[\"pickleball\"],\"court_types\":[\"indoor\"],\"phone\":\"405-555-0100\",\"website\":\"https://example.com\",\"details_url\":\"https://picklecourts.rent/oklahoma/oklahoma-city/north-canal-pickle-hall/details\"},{\"id\":\"d0000000-0000-4000-8000-000000000002\",\"slug\":\"cottonwood-court-house\",\"name\":\"Cottonwood Court House\",\"region\":{\"id\":\"a074ae77-1ecc-43c8-8f5b-328f9da389d0\",\"slug\":\"oklahoma-city\",\"name\":\"Oklahoma City\",\"state\":\"Oklahoma\"},\"address\":{\"street\":\"88 Sample Street\",\"city\":\"Oklahoma City\",\"state\":\"OK\",\"postal_code\":\"73104\"},\"location\":{\"latitude\":35.466,\"longitude\":-97.517},\"distance_miles\":1.4,\"timezone\":\"America/Chicago\",\"currency\":\"USD\",\"booking_support\":\"native\",\"bookable_on_picklecourts\":true,\"court_count\":6,\"sport_types\":[\"pickleball\"],\"court_types\":[\"indoor\",\"outdoor\"],\"phone\":\"405-555-0100\",\"website\":\"https://example.com\",\"details_url\":\"https://picklecourts.rent/oklahoma/oklahoma-city/cottonwood-court-house/details\"}],\"total_matching_venues\":3,\"returned_venues\":3,\"truncated\":false,\"covered_regions\":[]}"
+     }
+    ],
+    "structuredContent": {
+     "query": {
+      "query": "Oklahoma City",
+      "latitude": null,
+      "longitude": null,
+      "radius_miles": 25,
+      "sport_type": "pickleball",
+      "court_type": "any",
+      "bookable_only": false,
+      "limit": 10
+     },
+     "venues": [
+      {
+       "id": "d0000000-0000-4000-8000-000000000001",
+       "slug": "lanternfield-paddle-club",
+       "name": "Lanternfield Paddle Club",
+       "region": {
+        "id": "a074ae77-1ecc-43c8-8f5b-328f9da389d0",
+        "slug": "oklahoma-city",
+        "name": "Oklahoma City",
+        "state": "Oklahoma"
+       },
+       "address": {
+        "street": "410 Demo Lane",
+        "city": "Oklahoma City",
+        "state": "OK",
+        "postal_code": "73104"
+       },
+       "location": {
+        "latitude": 35.489,
+        "longitude": -97.53
+       },
+       "distance_miles": 0.7,
+       "timezone": "America/Chicago",
+       "currency": "USD",
+       "booking_support": "native",
+       "bookable_on_picklecourts": true,
+       "court_count": 6,
+       "sport_types": [
+        "pickleball"
+       ],
+       "court_types": [
+        "indoor"
+       ],
+       "phone": "405-555-0100",
+       "website": "https://example.com",
+       "details_url": "https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details"
+      },
+      {
+       "id": "d0000000-0000-4000-8000-000000000003",
+       "slug": "north-canal-pickle-hall",
+       "name": "North Canal Pickle Hall",
+       "region": {
+        "id": "a074ae77-1ecc-43c8-8f5b-328f9da389d0",
+        "slug": "oklahoma-city",
+        "name": "Oklahoma City",
+        "state": "Oklahoma"
+       },
+       "address": {
+        "street": "1200 Example Avenue",
+        "city": "Oklahoma City",
+        "state": "OK",
+        "postal_code": "73104"
+       },
+       "location": {
+        "latitude": 35.502,
+        "longitude": -97.505
+       },
+       "distance_miles": 1.3,
+       "timezone": "America/Chicago",
+       "currency": "USD",
+       "booking_support": "native",
+       "bookable_on_picklecourts": true,
+       "court_count": 8,
+       "sport_types": [
+        "pickleball"
+       ],
+       "court_types": [
+        "indoor"
+       ],
+       "phone": "405-555-0100",
+       "website": "https://example.com",
+       "details_url": "https://picklecourts.rent/oklahoma/oklahoma-city/north-canal-pickle-hall/details"
+      },
+      {
+       "id": "d0000000-0000-4000-8000-000000000002",
+       "slug": "cottonwood-court-house",
+       "name": "Cottonwood Court House",
+       "region": {
+        "id": "a074ae77-1ecc-43c8-8f5b-328f9da389d0",
+        "slug": "oklahoma-city",
+        "name": "Oklahoma City",
+        "state": "Oklahoma"
+       },
+       "address": {
+        "street": "88 Sample Street",
+        "city": "Oklahoma City",
+        "state": "OK",
+        "postal_code": "73104"
+       },
+       "location": {
+        "latitude": 35.466,
+        "longitude": -97.517
+       },
+       "distance_miles": 1.4,
+       "timezone": "America/Chicago",
+       "currency": "USD",
+       "booking_support": "native",
+       "bookable_on_picklecourts": true,
+       "court_count": 6,
+       "sport_types": [
+        "pickleball"
+       ],
+       "court_types": [
+        "indoor",
+        "outdoor"
+       ],
+       "phone": "405-555-0100",
+       "website": "https://example.com",
+       "details_url": "https://picklecourts.rent/oklahoma/oklahoma-city/cottonwood-court-house/details"
+      }
+     ],
+     "total_matching_venues": 3,
+     "returned_venues": 3,
+     "truncated": false,
+     "covered_regions": []
+    }
+   }
+  },
+  {
+   "name": "find_availability_by_venue",
+   "arguments": {
+    "venue": "Lanternfield Paddle Club",
+    "date": "2026-11-07",
+    "start_time": "18:00",
+    "end_time": "20:00"
+   },
+   "result": {
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"query\":{\"date\":\"2026-11-07\",\"start_time\":\"18:00\",\"end_time\":\"20:00\",\"duration_minutes\":60,\"sport_type\":\"pickleball\",\"court_type\":\"any\",\"courts_needed\":1,\"limit\":10},\"venue\":{\"id\":\"d0000000-0000-4000-8000-000000000001\",\"slug\":\"lanternfield-paddle-club\",\"name\":\"Lanternfield Paddle Club\",\"timezone\":\"America/Chicago\",\"currency\":\"USD\",\"booking_support\":\"native\",\"region\":{\"id\":\"a074ae77-1ecc-43c8-8f5b-328f9da389d0\",\"slug\":\"oklahoma-city\",\"name\":\"Oklahoma City\",\"state\":\"Oklahoma\"},\"address\":{\"street\":\"410 Demo Lane\",\"city\":\"Oklahoma City\",\"state\":\"OK\",\"postal_code\":\"73104\"},\"details_url\":\"https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07\"},\"availability_status\":\"available\",\"availability_reason\":null,\"slots\":[{\"start_date_local\":\"2026-11-07\",\"start_time_local\":\"18:00\",\"end_date_local\":\"2026-11-07\",\"end_time_local\":\"19:00\",\"start_datetime_local\":\"2026-11-07T18:00:00-06:00\",\"end_datetime_local\":\"2026-11-07T19:00:00-06:00\",\"start_time_utc\":\"2026-11-08T00:00:00.000Z\",\"end_time_utc\":\"2026-11-08T01:00:00.000Z\",\"time_ambiguity\":null,\"duration_minutes\":60,\"available_court_count\":6,\"available_courts_by_type\":{\"indoor\":6,\"outdoor\":0},\"sport_types\":[\"pickleball\"],\"court_types\":[\"indoor\"],\"courts\":[{\"id\":\"811f6350-2345-47f8-99a4-3b5648007f84\",\"name\":\"Court 1\",\"sport_type\":\"pickleball\",\"court_type\":\"indoor\",\"rental_price_cents\":4400}],\"rental_subtotal_cents\":4400,\"currency\":\"USD\",\"booking_url\":\"https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07&start=18%3A00&duration=60\"},{\"start_date_local\":\"2026-11-07\",\"start_time_local\":\"18:30\",\"end_date_local\":\"2026-11-07\",\"end_time_local\":\"19:30\",\"start_datetime_local\":\"2026-11-07T18:30:00-06:00\",\"end_datetime_local\":\"2026-11-07T19:30:00-06:00\",\"start_time_utc\":\"2026-11-08T00:30:00.000Z\",\"end_time_utc\":\"2026-11-08T01:30:00.000Z\",\"time_ambiguity\":null,\"duration_minutes\":60,\"available_court_count\":6,\"available_courts_by_type\":{\"indoor\":6,\"outdoor\":0},\"sport_types\":[\"pickleball\"],\"court_types\":[\"indoor\"],\"courts\":[{\"id\":\"811f6350-2345-47f8-99a4-3b5648007f84\",\"name\":\"Court 1\",\"sport_type\":\"pickleball\",\"court_type\":\"indoor\",\"rental_price_cents\":4400}],\"rental_subtotal_cents\":4400,\"currency\":\"USD\",\"booking_url\":\"https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07&start=18%3A30&duration=60\"},{\"start_date_local\":\"2026-11-07\",\"start_time_local\":\"19:00\",\"end_date_local\":\"2026-11-07\",\"end_time_local\":\"20:00\",\"start_datetime_local\":\"2026-11-07T19:00:00-06:00\",\"end_datetime_local\":\"2026-11-07T20:00:00-06:00\",\"start_time_utc\":\"2026-11-08T01:00:00.000Z\",\"end_time_utc\":\"2026-11-08T02:00:00.000Z\",\"time_ambiguity\":null,\"duration_minutes\":60,\"available_court_count\":6,\"available_courts_by_type\":{\"indoor\":6,\"outdoor\":0},\"sport_types\":[\"pickleball\"],\"court_types\":[\"indoor\"],\"courts\":[{\"id\":\"811f6350-2345-47f8-99a4-3b5648007f84\",\"name\":\"Court 1\",\"sport_type\":\"pickleball\",\"court_type\":\"indoor\",\"rental_price_cents\":4400}],\"rental_subtotal_cents\":4400,\"currency\":\"USD\",\"booking_url\":\"https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07&start=19%3A00&duration=60\"}],\"total_matching_start_times\":3,\"returned_start_times\":3,\"truncated\":false,\"freshness\":{\"source\":\"schedule\",\"has_active_integration\":false,\"latest_sync_status\":\"none\",\"last_sync_attempt_at\":null,\"availability_updated_at\":\"2026-11-06T21:13:28.607Z\"},\"pricing_known\":true,\"generated_at\":\"2026-11-06T21:14:07.849Z\"}"
+     }
+    ],
+    "structuredContent": {
+     "query": {
+      "date": "2026-11-07",
+      "start_time": "18:00",
+      "end_time": "20:00",
+      "duration_minutes": 60,
+      "sport_type": "pickleball",
+      "court_type": "any",
+      "courts_needed": 1,
+      "limit": 10
+     },
+     "venue": {
+      "id": "d0000000-0000-4000-8000-000000000001",
+      "slug": "lanternfield-paddle-club",
+      "name": "Lanternfield Paddle Club",
+      "timezone": "America/Chicago",
+      "currency": "USD",
+      "booking_support": "native",
+      "region": {
+       "id": "a074ae77-1ecc-43c8-8f5b-328f9da389d0",
+       "slug": "oklahoma-city",
+       "name": "Oklahoma City",
+       "state": "Oklahoma"
+      },
+      "address": {
+       "street": "410 Demo Lane",
+       "city": "Oklahoma City",
+       "state": "OK",
+       "postal_code": "73104"
+      },
+      "details_url": "https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07"
+     },
+     "availability_status": "available",
+     "availability_reason": null,
+     "slots": [
+      {
+       "start_date_local": "2026-11-07",
+       "start_time_local": "18:00",
+       "end_date_local": "2026-11-07",
+       "end_time_local": "19:00",
+       "start_datetime_local": "2026-11-07T18:00:00-06:00",
+       "end_datetime_local": "2026-11-07T19:00:00-06:00",
+       "start_time_utc": "2026-11-08T00:00:00.000Z",
+       "end_time_utc": "2026-11-08T01:00:00.000Z",
+       "time_ambiguity": null,
+       "duration_minutes": 60,
+       "available_court_count": 6,
+       "available_courts_by_type": {
+        "indoor": 6,
+        "outdoor": 0
+       },
+       "sport_types": [
+        "pickleball"
+       ],
+       "court_types": [
+        "indoor"
+       ],
+       "courts": [
+        {
+         "id": "811f6350-2345-47f8-99a4-3b5648007f84",
+         "name": "Court 1",
+         "sport_type": "pickleball",
+         "court_type": "indoor",
+         "rental_price_cents": 4400
+        }
+       ],
+       "rental_subtotal_cents": 4400,
+       "currency": "USD",
+       "booking_url": "https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07&start=18%3A00&duration=60"
+      },
+      {
+       "start_date_local": "2026-11-07",
+       "start_time_local": "18:30",
+       "end_date_local": "2026-11-07",
+       "end_time_local": "19:30",
+       "start_datetime_local": "2026-11-07T18:30:00-06:00",
+       "end_datetime_local": "2026-11-07T19:30:00-06:00",
+       "start_time_utc": "2026-11-08T00:30:00.000Z",
+       "end_time_utc": "2026-11-08T01:30:00.000Z",
+       "time_ambiguity": null,
+       "duration_minutes": 60,
+       "available_court_count": 6,
+       "available_courts_by_type": {
+        "indoor": 6,
+        "outdoor": 0
+       },
+       "sport_types": [
+        "pickleball"
+       ],
+       "court_types": [
+        "indoor"
+       ],
+       "courts": [
+        {
+         "id": "811f6350-2345-47f8-99a4-3b5648007f84",
+         "name": "Court 1",
+         "sport_type": "pickleball",
+         "court_type": "indoor",
+         "rental_price_cents": 4400
+        }
+       ],
+       "rental_subtotal_cents": 4400,
+       "currency": "USD",
+       "booking_url": "https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07&start=18%3A30&duration=60"
+      },
+      {
+       "start_date_local": "2026-11-07",
+       "start_time_local": "19:00",
+       "end_date_local": "2026-11-07",
+       "end_time_local": "20:00",
+       "start_datetime_local": "2026-11-07T19:00:00-06:00",
+       "end_datetime_local": "2026-11-07T20:00:00-06:00",
+       "start_time_utc": "2026-11-08T01:00:00.000Z",
+       "end_time_utc": "2026-11-08T02:00:00.000Z",
+       "time_ambiguity": null,
+       "duration_minutes": 60,
+       "available_court_count": 6,
+       "available_courts_by_type": {
+        "indoor": 6,
+        "outdoor": 0
+       },
+       "sport_types": [
+        "pickleball"
+       ],
+       "court_types": [
+        "indoor"
+       ],
+       "courts": [
+        {
+         "id": "811f6350-2345-47f8-99a4-3b5648007f84",
+         "name": "Court 1",
+         "sport_type": "pickleball",
+         "court_type": "indoor",
+         "rental_price_cents": 4400
+        }
+       ],
+       "rental_subtotal_cents": 4400,
+       "currency": "USD",
+       "booking_url": "https://picklecourts.rent/oklahoma/oklahoma-city/lanternfield-paddle-club/details?date=2026-11-07&start=19%3A00&duration=60"
+      }
+     ],
+     "total_matching_start_times": 3,
+     "returned_start_times": 3,
+     "truncated": false,
+     "freshness": {
+      "source": "schedule",
+      "has_active_integration": false,
+      "latest_sync_status": "none",
+      "last_sync_attempt_at": null,
+      "availability_updated_at": "2026-11-06T21:13:28.607Z"
+     },
+     "pricing_known": true,
+     "generated_at": "2026-11-06T21:14:07.849Z"
+    }
+   }
+  }
+ ]
+}

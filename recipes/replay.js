@@ -11,11 +11,11 @@
   var realFetch = window.fetch.bind(window);
   var loading = realFetch(new URL(window.__DEMO_RECORDINGS || 'recordings.json', document.baseURI).href).then(function (r) { return r.json(); }).then(function (j) { rec = j; });
   // pos: index of the last recorded change the viewer has made; used: changes already replayed.
-  var KEY = 'demo_replay';
+  var KEY = window.__DEMO_REPLAY_KEY || 'demo_replay';
   function load() { try { var v = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (v) return v; } catch (e) {} return { pos: -1, used: {} }; }
   function save(v) { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
   var state = load();
-  var STATELESS = /^\/(api\/(estimate$|describe|foods\/|accounts\/|profiles$|recipes\/app\/(status|foods\/|preview))|recipes\/api\/(accounts\/|users\/search))/;
+  var STATELESS = /^\/(api\/(estimate$|describe|foods\/|accounts\/|profiles$|events$|recipes\/app\/(status|foods\/|preview))|recipes\/api\/(accounts\/|users\/search))/;
   var ID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g;
 
   function pathOnly(p) { return p.split('?')[0]; }
