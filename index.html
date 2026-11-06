@@ -99,6 +99,11 @@ a { color: inherit; text-underline-offset: 2px; }
 .tools { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .tools li { padding-left: 16px; border-left: 2px solid var(--rule); max-width: 64ch; }
 .tools code { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+details.more { max-width: 64ch; margin-top: 12px; }
+details.more summary { cursor: pointer; font-weight: 600; color: var(--ink-soft); font-size: 14px; }
+details.more summary:hover { color: var(--ink); }
+details.more[open] summary { margin-bottom: 10px; }
+.steps { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 64ch; }
 @media (max-width: 860px) {
   section.app { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .phone-col { position: static; }
@@ -130,7 +135,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
   <header class="top">
     <div class="eyebrow">Ira Millington · interactive demo</div>
     <h1>iPhone apps built with AI, running live</h1>
-    <p class="lede">Ira builds and runs these apps with Claude Code and Codex: three iPhone apps, their servers, and the home server they run on. Each phone below runs the real app, the same source code that ships to Ira's iPhone, built for the browser. Only the data is invented, and the first three phones talk to each other the way the real apps do. The fourth is PickleCourts, a court-booking app Ira co-develops, where Ira built the tools that let AI assistants search and book.</p>
+    <p class="lede">Health, Recipes and Claro are Ira's personal apps, built for Ira's own household and friends and installed straight onto their iPhones, not sold in the App Store. Ira builds and runs them with Claude Code and Codex, along with their servers and the home server they run on. Health is used every day by three people. Each phone below runs the real app, the same source code that ships to those iPhones, built for the browser. Only the data is invented, and the first three phones talk to each other the way the real apps do. The fourth is PickleCourts, a public court-booking app in the App Store with more than 200 downloads, which Ira co-develops and where Ira built the tools that let AI assistants search and book.</p>
     <nav class="jump" aria-label="Sections">
       <a href="#connect"><span class="dot" style="background: var(--ink-soft)"></span>How they connect</a>
       <a href="#health"><span class="dot" style="background: var(--health)"></span>Health</a>
@@ -170,7 +175,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
       <path class="line" d="M628 56H542" marker-end="url(#ah)"/>
       <text class="lab" x="546" y="49">practice minutes</text>
       <path class="line dash" d="M628 92H542" marker-end="url(#ah)" marker-start="url(#ah)"/>
-      <text class="lab" x="552" y="85">translations</text>
+      <text class="lab" x="552" y="85">AI translator</text>
       <rect class="box" x="120" y="196" width="620" height="84" rx="14"/>
       <text class="name" x="140" y="226">Home server</text>
       <text class="sub" x="140" y="248">Proxmox mini PC · Docker VM · Tailscale Funnel publishes only the app APIs</text>
@@ -180,11 +185,11 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     <div class="cols">
       <div>
         <h3>Recipes → Health</h3>
-        <p>A Health account signs straight into Recipes: the Recipes server checks the password with Health and gets a link code back, so the diary is connected without a trip to Settings. Ingredients are matched to Health's own food database, recipes show nutrition per serving, and <b>Save as a meal</b> puts one serving into Health's saved meals, one tap from the diary. The Recipes server never stores the code or any nutrition data.</p>
+        <p>One login: a Health account signs straight into Recipes, and the diary is linked in the same step. Ingredients are matched to Health's food database, so recipes show nutrition per serving, and <b>Save as a meal</b> puts a serving one tap from the diary. Recipes never stores nutrition data.</p>
       </div>
       <div>
         <h3>Claro → Health</h3>
-        <p>Claro counts the minutes you actually practice (not minutes the app sat open) and sends them with a link code made from the habit in Health. A day that reaches the goal ticks the habit. Claro never holds Health's API key, and the code does only that one thing. Claro's optional answer translator also runs on the Health server, so the AI key stays off the phone.</p>
+        <p>Claro sends the minutes you actually practiced, with a link code made from a Health habit; reaching the goal ticks it. The code can do only that one thing, and Claro never holds Health's API key. Its AI translator also runs on Health's server.</p>
       </div>
       <div>
         <h3>Try it across phones</h3>
@@ -212,10 +217,10 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
     <div class="story">
       <div>
-        <div class="tag">Health · Expo / React Native · iPhone</div>
+        <div class="tag">Health · personal app · Expo / React Native · iPhone</div>
         <h2 id="health-h">Food, habits and training, with a camera that counts</h2>
       </div>
-      <p>Health is a food, habit, symptom and training tracker for two people in one household. It pulls steps, energy and sleep from Apple Health or Fitbit, and conditions picked at setup (lactose intolerance, IBS, high blood pressure and more) change what it tracks and which nutrients it weighs.</p>
+      <p>Health is a food, habit, symptom and training tracker, used every day by three people. It pulls steps, energy and sleep from Apple Health or Fitbit, and conditions picked at setup (lactose intolerance, IBS, high blood pressure and more) change what it tracks and which nutrients it weighs.</p>
       <div>
         <h3>What makes it different</h3>
         <ul class="unique">
@@ -227,13 +232,31 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
         </ul>
       </div>
       <div>
-        <h3>The AI inside, and how the models were tested</h3>
+        <h3>The AI inside</h3>
         <ul class="unique">
-          <li><b>Meal estimates: Gemini 3.8 Flash, picked Oct 20 after two tests.</b> First, each candidate estimated 20 plates from Nutrition5k, a research set of real cafeteria meals whose calories are known, and was scored on calorie error, speed and failed calls. Second, the same leftover-pizza photo was run repeatedly to check that the answer holds still. Gemini 3.5 Flash Lite, the cheaper model in use until then, said a quarter, three quarters and seven eighths had been eaten on different runs (500 to 3,500 kcal). 3.8 Flash said three quarters every time, for about a cent more per estimate.</li>
-          <li><b>Fallback: Gemini 3.5 Flash Lite.</b> In the same 20-plate test the previous fallback, Qwen3.8 Flash, was rate-limited on 9 of 14 calls and took about 54 seconds on the rest. Lite answered every call in about 5 seconds with about the same calorie error.</li>
-          <li><b>Monthly trigger analysis: Claude Sonnet 5.5.</b> Chosen Sept 28 from published reasoning scores rather than a test of our own: within a few points of Opus 5.5 at half the price. It runs twelve times a year at 10 to 15 cents a run.</li>
-          <li>Models are a setting on the server, so they can be swapped without an app update. In this demo the AI answers are pre-written; everything the server does with them is real.</li>
+          <li><b>Meal photos: Gemini 3.8 Flash, with Gemini 3.5 Flash Lite as fallback.</b> Picked Oct 20 by testing, not by reputation (details below). Replies must match a JSON schema; a failure tries the fallback, then shows an error rather than a guess.</li>
+          <li><b>Monthly trigger analysis: Claude Sonnet 5.5.</b> Explained in full below.</li>
+          <li>Models are a server setting, swapped without an app update. In this demo the AI answers are pre-written; everything the server does with them is real.</li>
         </ul>
+        <details class="more">
+          <summary>How the photo models were tested</summary>
+          <ul class="unique">
+            <li><b>Accuracy.</b> Each candidate estimated 20 plates from Nutrition5k, a research set of real cafeteria meals with known calories, scored on calorie error, speed and failed calls.</li>
+            <li><b>Consistency.</b> The same leftover-pizza photo was run repeatedly. The cheaper model in use until then said a quarter, three quarters and seven eighths had been eaten on different runs (500 to 3,500 kcal). 3.8 Flash said three quarters every time, for about a cent more per estimate.</li>
+            <li><b>Fallback.</b> The previous fallback, Qwen3.8 Flash, was rate-limited on 9 of 14 calls and took about 54 seconds on the rest. Flash Lite answered every call in about 5 seconds with about the same calorie error.</li>
+          </ul>
+        </details>
+      </div>
+      <div>
+        <h3>The monthly trigger analysis</h3>
+        <p>For someone with a gut condition, the hard question is what keeps setting it off. Once a month Health hands a model the whole finished month as a dated timeline and asks for suspected triggers, each with its evidence, a confidence and its reasoning.</p>
+        <ol class="steps">
+          <li><b>What goes in.</b> Every food with its time, lactose in grams, whether a lactase pill was taken, and inflammatory flags; each after-meal rating (“felt 2/5 forty-five minutes after dinner: bloating”); symptoms and severity; water against target; sleep; daily stress and mood notes; and menstrual cycle days.</li>
+          <li><b>What it is told.</b> Compare foods against the symptoms that follow them, but treat cycle phase as its own variable, so a flare around a period is not blamed on that day's lunch. A food that repeats as a trigger across different cycle phases is the strongest evidence. Only call something a trigger when the data supports it, and never frame it as a diagnosis.</li>
+          <li><b>What comes back.</b> A list of triggers, each with evidence, a low, medium or high confidence, a recommendation and the reasoning, forced into that shape by a strict JSON schema. It is saved and shown in the monthly report.</li>
+          <li><b>What is left out.</b> Days marked as not logged are dropped entirely, so a half-logged day can't look like a symptom-free one. A month still in progress is refused. It runs twelve times a year, at 10 to 15 cents a run.</li>
+        </ol>
+        <p class="note">Sonnet 5.5 was chosen Sept 28 from published reasoning scores rather than a test of our own: within a few points of Opus 5.5 at half the price. Sam has no gut conditions, so the analysis doesn't appear in this demo; Settings shows which conditions turn it on.</p>
       </div>
       <div>
         <h3>Try this</h3>
@@ -269,7 +292,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
     <div class="story">
       <div>
-        <div class="tag">Recipes · Expo / React Native · iPhone</div>
+        <div class="tag">Recipes · personal app · Expo / React Native · iPhone</div>
         <h2 id="recipes-h">A cookbook shared with friends, linked to the food diary</h2>
       </div>
       <p>Recipes is a social cookbook: everyone has a profile, adds friends and shares recipes with them, then saves or copies what friends share. It has its own FastAPI server and Postgres database beside Health's on the home server, with the same build, update and deploy setup.</p>
@@ -314,7 +337,7 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     </div>
     <div class="story">
       <div>
-        <div class="tag">Claro · Expo / React Native · iPhone</div>
+        <div class="tag">Claro · personal app · Expo / React Native · iPhone</div>
         <h2 id="claro-h">Everyday Mexican Spanish for a returning beginner</h2>
       </div>
       <p>Claro is a Spanish course built around real situations in Mexico: ordering at a fonda, calling the plumber, texting a friend. Units run from A1 to B2, with spaced reviews, graded readings, conversations and a hands-free “Just listen” mode for work. There is no account: progress lives on the phone. The one thing it sends is practice minutes, to a Health habit you link it to.</p>
@@ -329,11 +352,10 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
         </ul>
       </div>
       <div>
-        <h3>The AI inside, and how the models were tested</h3>
+        <h3>The AI inside</h3>
         <ul class="unique">
-          <li><b>Answer translator: Claude Haiku 5.5, picked Oct 28.</b> The word-by-word check shows where a typed answer differs from the model sentence, but only a language model can say what the learner's own Spanish actually means. Ten models were given the same beginner answers, mistakes included, and compared on how well they read them. Haiku read them best, at about $0.00025 an answer. Gemini 3.1 Flash Lite, at the same price, is the fallback.</li>
-          <li>It only ever shows a translation and up to three notes. It never changes a rating or a score, it is sent only the prompt, your answer and the model answers, and it goes quiet offline. It is off in this demo.</li>
-          <li><b>Same pattern as Health:</b> the AI call is made by the Health server, never the phone, so no API key ships in the app.</li>
+          <li><b>Answer translator: Claude Haiku 5.5, picked Oct 28 from ten models.</b> A word-by-word check shows where a typed answer differs; only a language model can say what the learner's own Spanish means. Each model read the same beginner answers, mistakes included. Haiku read them best, at about $0.00025 an answer.</li>
+          <li>It shows a translation and up to three notes, never changes a score, and runs on the Health server so no key ships in the app. It is off in this demo.</li>
           <li><b>No AI where a rule does better.</b> Review timing is the FSRS algorithm, the writing checker is hand-written rules for known slips, and “Say it and check” uses the phone's own Spanish (Mexico) speech recognizer.</li>
         </ul>
       </div>
@@ -360,15 +382,15 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
           <div class="fit"><div class="loading">Starting PickleCourts…</div><iframe id="p-frame" title="PickleCourts app" src="picklecourts/"></iframe></div>
         </div>
       </div>
-      <div class="caption">Three invented Oklahoma City clubs, recorded on Friday, November 6. Payment runs in the server's mock mode: nothing is charged.</div>
+      <div class="caption">Three invented Oklahoma City clubs, recorded on Friday, November 6. Payment runs in the server's mock mode: nothing is charged. The map is off, since it needs a Google key.</div>
       <button class="reset" type="button" data-reset>Start the demo over</button>
     </div>
     <div class="story">
       <div>
-        <div class="tag">PickleCourts · co-developed · Expo / React Native · iPhone and web</div>
+        <div class="tag">PickleCourts · public, co-developed · Expo / React Native · iPhone and web</div>
         <h2 id="pc-h">Book a pickleball court, from the app or from an AI assistant</h2>
       </div>
-      <p><a href="https://picklecourts.rent">PickleCourts</a> is a court-booking marketplace that Ira co-develops with one other developer. It shows open times across clubs that run different booking systems and books them in one checkout. This phone runs its consumer app against its real Node server and Postgres on a throwaway database. The clubs, prices and booking below are invented.</p>
+      <p><a href="https://picklecourts.rent">PickleCourts</a> is a public court-booking marketplace that Ira co-develops with one other developer, with more than 200 downloads in the App Store. It shows open times across clubs that run different booking systems and books them in one checkout. This phone runs its consumer app against its real Node server and Postgres on a throwaway database. The clubs, prices and booking below are invented.</p>
       <div>
         <h3>Ira's part: tools for AI agents</h3>
         <ul class="unique">
