@@ -99,6 +99,11 @@ a { color: inherit; text-underline-offset: 2px; }
 .tools { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .tools li { padding-left: 16px; border-left: 2px solid var(--rule); max-width: 64ch; }
 .tools code { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+details.more { max-width: 64ch; margin-top: 12px; }
+details.more summary { cursor: pointer; font-weight: 600; color: var(--ink-soft); font-size: 14px; }
+details.more summary:hover { color: var(--ink); }
+details.more[open] summary { margin-bottom: 10px; }
+.steps { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 64ch; }
 @media (max-width: 860px) {
   section.app { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .phone-col { position: static; }
@@ -180,11 +185,11 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
     <div class="cols">
       <div>
         <h3>Recipes → Health</h3>
-        <p>A Health account signs straight into Recipes: the Recipes server checks the password with Health and gets a link code back, so the diary is connected without a trip to Settings. Ingredients are matched to Health's own food database, recipes show nutrition per serving, and <b>Save as a meal</b> puts one serving into Health's saved meals, one tap from the diary. The Recipes server never stores the code or any nutrition data.</p>
+        <p>One login: a Health account signs straight into Recipes, and the diary is linked in the same step. Ingredients are matched to Health's food database, so recipes show nutrition per serving, and <b>Save as a meal</b> puts a serving one tap from the diary. Recipes never stores nutrition data.</p>
       </div>
       <div>
         <h3>Claro → Health</h3>
-        <p>Claro counts the minutes you actually practice (not minutes the app sat open) and sends them with a link code made from the habit in Health. A day that reaches the goal ticks the habit. Claro never holds Health's API key, and the code does only that one thing. Claro's optional answer translator also runs on the Health server, so the AI key stays off the phone.</p>
+        <p>Claro sends the minutes you actually practiced, with a link code made from a Health habit; reaching the goal ticks it. The code can do only that one thing, and Claro never holds Health's API key. Its AI translator also runs on Health's server.</p>
       </div>
       <div>
         <h3>Try it across phones</h3>
@@ -227,13 +232,31 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
         </ul>
       </div>
       <div>
-        <h3>The AI inside, and how the models were tested</h3>
+        <h3>The AI inside</h3>
         <ul class="unique">
-          <li><b>Meal estimates: Gemini 3.8 Flash, picked Oct 20 after two tests.</b> First, each candidate estimated 20 plates from Nutrition5k, a research set of real cafeteria meals whose calories are known, and was scored on calorie error, speed and failed calls. Second, the same leftover-pizza photo was run repeatedly to check that the answer holds still. Gemini 3.5 Flash Lite, the cheaper model in use until then, said a quarter, three quarters and seven eighths had been eaten on different runs (500 to 3,500 kcal). 3.8 Flash said three quarters every time, for about a cent more per estimate.</li>
-          <li><b>Fallback: Gemini 3.5 Flash Lite.</b> In the same 20-plate test the previous fallback, Qwen3.8 Flash, was rate-limited on 9 of 14 calls and took about 54 seconds on the rest. Lite answered every call in about 5 seconds with about the same calorie error.</li>
-          <li><b>Monthly trigger analysis: Claude Sonnet 5.5.</b> Chosen Sept 28 from published reasoning scores rather than a test of our own: within a few points of Opus 5.5 at half the price. It runs twelve times a year at 10 to 15 cents a run.</li>
-          <li>Models are a setting on the server, so they can be swapped without an app update. In this demo the AI answers are pre-written; everything the server does with them is real.</li>
+          <li><b>Meal photos: Gemini 3.8 Flash, with Gemini 3.5 Flash Lite as fallback.</b> Picked Oct 20 by testing, not by reputation (details below). Replies must match a JSON schema; a failure tries the fallback, then shows an error rather than a guess.</li>
+          <li><b>Monthly trigger analysis: Claude Sonnet 5.5.</b> Explained in full below.</li>
+          <li>Models are a server setting, swapped without an app update. In this demo the AI answers are pre-written; everything the server does with them is real.</li>
         </ul>
+        <details class="more">
+          <summary>How the photo models were tested</summary>
+          <ul class="unique">
+            <li><b>Accuracy.</b> Each candidate estimated 20 plates from Nutrition5k, a research set of real cafeteria meals with known calories, scored on calorie error, speed and failed calls.</li>
+            <li><b>Consistency.</b> The same leftover-pizza photo was run repeatedly. The cheaper model in use until then said a quarter, three quarters and seven eighths had been eaten on different runs (500 to 3,500 kcal). 3.8 Flash said three quarters every time, for about a cent more per estimate.</li>
+            <li><b>Fallback.</b> The previous fallback, Qwen3.8 Flash, was rate-limited on 9 of 14 calls and took about 54 seconds on the rest. Flash Lite answered every call in about 5 seconds with about the same calorie error.</li>
+          </ul>
+        </details>
+      </div>
+      <div>
+        <h3>The monthly trigger analysis</h3>
+        <p>For someone with a gut condition, the hard question is what keeps setting it off. Once a month Health hands a model the whole finished month as a dated timeline and asks for suspected triggers, each with its evidence, a confidence and its reasoning.</p>
+        <ol class="steps">
+          <li><b>What goes in.</b> Every food with its time, lactose in grams, whether a lactase pill was taken, and inflammatory flags; each after-meal rating (“felt 2/5 forty-five minutes after dinner: bloating”); symptoms and severity; water against target; sleep; daily stress and mood notes; and menstrual cycle days.</li>
+          <li><b>What it is told.</b> Compare foods against the symptoms that follow them, but treat cycle phase as its own variable, so a flare around a period is not blamed on that day's lunch. A food that repeats as a trigger across different cycle phases is the strongest evidence. Only call something a trigger when the data supports it, and never frame it as a diagnosis.</li>
+          <li><b>What comes back.</b> A list of triggers, each with evidence, a low, medium or high confidence, a recommendation and the reasoning, forced into that shape by a strict JSON schema. It is saved and shown in the monthly report.</li>
+          <li><b>What is left out.</b> Days marked as not logged are dropped entirely, so a half-logged day can't look like a symptom-free one. A month still in progress is refused. It runs twelve times a year, at 10 to 15 cents a run.</li>
+        </ol>
+        <p class="note">Sonnet 5.5 was chosen Sept 28 from published reasoning scores rather than a test of our own: within a few points of Opus 5.5 at half the price. Sam has no gut conditions, so the analysis doesn't appear in this demo; Settings shows which conditions turn it on.</p>
       </div>
       <div>
         <h3>Try this</h3>
@@ -329,11 +352,10 @@ try { localStorage.clear(); sessionStorage.removeItem('demo_replay'); sessionSto
         </ul>
       </div>
       <div>
-        <h3>The AI inside, and how the models were tested</h3>
+        <h3>The AI inside</h3>
         <ul class="unique">
-          <li><b>Answer translator: Claude Haiku 5.5, picked Oct 28.</b> The word-by-word check shows where a typed answer differs from the model sentence, but only a language model can say what the learner's own Spanish actually means. Ten models were given the same beginner answers, mistakes included, and compared on how well they read them. Haiku read them best, at about $0.00025 an answer. Gemini 3.1 Flash Lite, at the same price, is the fallback.</li>
-          <li>It only ever shows a translation and up to three notes. It never changes a rating or a score, it is sent only the prompt, your answer and the model answers, and it goes quiet offline. It is off in this demo.</li>
-          <li><b>Same pattern as Health:</b> the AI call is made by the Health server, never the phone, so no API key ships in the app.</li>
+          <li><b>Answer translator: Claude Haiku 5.5, picked Oct 28 from ten models.</b> A word-by-word check shows where a typed answer differs; only a language model can say what the learner's own Spanish means. Each model read the same beginner answers, mistakes included. Haiku read them best, at about $0.00025 an answer.</li>
+          <li>It shows a translation and up to three notes, never changes a score, and runs on the Health server so no key ships in the app. It is off in this demo.</li>
           <li><b>No AI where a rule does better.</b> Review timing is the FSRS algorithm, the writing checker is hand-written rules for known slips, and “Say it and check” uses the phone's own Spanish (Mexico) speech recognizer.</li>
         </ul>
       </div>
