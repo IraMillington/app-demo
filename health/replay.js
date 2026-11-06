@@ -1,16 +1,21 @@
-// Demo replay layer for the Health web build. Loaded before the app bundle; the
-// app's own code is unchanged. It answers the app's API calls from
+// Demo replay layer for the Health, Recipes and Claro web builds. Loaded before
+// each app's bundle; the apps' own code is unchanged. It answers the app's API calls from
 // recordings.json: the responses the real server gave when a scripted tour drove
-// this same build against invented data. Each change you make (log water, rate a
-// meal, ...) moves the replay to the server's state right after that change.
+// these same builds against invented data. Each change you make (log water, rate a
+// meal, ...) moves the replay to the server's state right after that change. The
+// three phones share one recording and one position (sessionStorage, same
+// origin), so a meal saved in Recipes or minutes sent from Claro show up in Health.
 (function () {
   var HOST = window.__DEMO_API_HOST;
   var rec = null;
   var realFetch = window.fetch.bind(window);
-  var loading = realFetch(new URL('recordings.json', document.baseURI).href).then(function (r) { return r.json(); }).then(function (j) { rec = j; });
-  var pos = -1; // index of the last recorded change the viewer has made
-  var used = {};
-  var STATELESS = /^\/api\/(estimate$|describe|foods\/|accounts\/|profiles$)/;
+  var loading = realFetch(new URL(window.__DEMO_RECORDINGS || 'recordings.json', document.baseURI).href).then(function (r) { return r.json(); }).then(function (j) { rec = j; });
+  // pos: index of the last recorded change the viewer has made; used: changes already replayed.
+  var KEY = 'demo_replay';
+  function load() { try { var v = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (v) return v; } catch (e) {} return { pos: -1, used: {} }; }
+  function save(v) { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  var state = load();
+  var STATELESS = /^\/(api\/(estimate$|describe|foods\/|accounts\/|profiles$|recipes\/app\/(status|foods\/|preview))|recipes\/api\/(accounts\/|users\/search))/;
   var ID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g;
 
   function pathOnly(p) { return p.split('?')[0]; }
@@ -27,7 +32,7 @@
     });
     var c = exact.length ? exact : loose;
     if (!c.length) return null;
-    var limit = nextWriteAfter(pos);
+    var limit = nextWriteAfter(state.pos);
     var before = c.filter(function (i) { return i < limit; });
     return before.length ? before[before.length - 1] : c[0];
   }
@@ -35,7 +40,7 @@
     var best = null;
     for (var i = 0; i < rec.length; i++) {
       var e = rec[i];
-      if (used[i] || e.method !== method || pathOnly(e.path) !== pathOnly(path)) continue;
+      if (state.used[i] || e.method !== method || pathOnly(e.path) !== pathOnly(path)) continue;
       if (best === null) best = i;
       if (body && e.reqBody === body) { best = i; break; }
     }
@@ -73,7 +78,7 @@
     ids.forEach(function (id) { var meal = id.replace(/Side$/, ''); n[meal] = (n[meal] || 0) + 1; });
     return Object.keys(n).map(function (m) { return m + '-' + (m === 'tacos' || m === 'bowl' ? Math.min(n[m], 2) : 1); }).join('+');
   }
-  function tell(msg) { try { if (window.parent !== window) window.parent.postMessage(Object.assign({ demo: 'health' }, msg), '*'); } catch (e) {} }
+  function tell(msg) { try { if (window.parent !== window) window.parent.postMessage(Object.assign({ demo: window.__DEMO_APP || 'health' }, msg), '*'); } catch (e) {} }
   function respond(e) {
     return new Response(e.body, { status: e.status, headers: { 'Content-Type': 'application/json' } });
   }
@@ -85,6 +90,7 @@
     var path = url.slice(HOST.length);
     var body = init && typeof init.body === 'string' ? init.body : null;
     return loading.then(function () {
+      state = load();
       return new Promise(function (res) { setTimeout(res, 120 + Math.random() * 180); });
     }).then(function () {
       var i;
@@ -115,8 +121,10 @@
         for (var j = rec.length - 1; j >= 0; j--) if (rec[j].method === method && pathOnly(rec[j].path).replace(ID, ':id') === shape) return respond(rec[j]);
         return new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
       }
-      used[i] = true;
-      pos = Math.max(pos, i);
+      state = load();
+      state.used[i] = true;
+      state.pos = Math.max(state.pos, i);
+      save(state);
       return respond(rec[i]);
     });
   };
